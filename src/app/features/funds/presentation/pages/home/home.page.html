@@ -1,7 +1,1 @@
-<app-table
-  [data]="funds()"
-  [columns]="config.tableConfig"
-  [isLoading]="isLoading()"
-  (rowClick)="onFundSelected($event)"
->
-</app-table>
+<app-table [data]="funds()" [columns]="tableCols" [isLoading]="isLoading()"> </app-table>

@@ -1,3 +1,36 @@
+<div class="w-full p-4 md:p-8">
+  <table class="block w-full md:table border-collapse" role="table">
+    <thead class="hidden md:table-header-group">
+      <tr>
+        @for (col of columns(); track col.key) {
+          <th scope="col" class="px-6 py-4">{{ col.header }}</th>
+        }
+      </tr>
+    </thead>
+
+    <tbody class="block md:table-row-group md:divide-y md:divide-slate-100">
+      @if (isLoading()) {
+        @for (i of [1, 2, 3, 4, 5]; track $index) {
+          <ng-container *ngTemplateOutlet="skeletonRow"></ng-container>
+        }
+      } @else {
+        @for (row of data(); track $index) {
+          <ng-container *ngTemplateOutlet="dataRow; context: { $implicit: row }"></ng-container>
+        } @empty {
+          <tr class="block md:table-row">
+            <td
+              [attr.colspan]="columns().length"
+              class="block md:table-cell p-8 text-center italic text-slate-400 bg-white rounded-xl md:rounded-none border border-slate-200 md:border-0 shadow-sm md:shadow-none"
+            >
+              {{ config.i18n.emptyTable }}
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>
+
 <ng-template #mobileLabel let-col>
   <span class="md:hidden text-[10px] font-bold text-slate-400 uppercase tracking-wider">
     {{ col.header }}
@@ -36,8 +69,7 @@
 
 <ng-template #dataRow let-row>
   <tr
-    class="block md:table-row mb-4 md:mb-0 bg-white rounded-xl md:rounded-none shadow-sm md:shadow-none border border-slate-200 md:border-0 hover:bg-slate-50 transition-colors cursor-pointer"
-    (click)="onRowClick(row)"
+    class="block md:table-row mb-4 md:mb-0 bg-white rounded-xl md:rounded-none shadow-sm md:shadow-none border border-slate-200 md:border-0"
     role="row"
   >
     @for (col of columns(); track col.key) {
@@ -58,6 +90,11 @@
                 {{ getCellValue(row, col.key) | date: 'dd/MM/yyyy HH:mm' }}
               </span>
             }
+            @case ('custom') {
+              @if (getDynamicCell(col, row, $index); as cell) {
+                <ng-container *ngComponentOutlet="cell.class; inputs: cell.inputs"></ng-container>
+              }
+            }
             @default {
               {{ getCellValue(row, col.key) }}
             }
@@ -67,36 +104,3 @@
     }
   </tr>
 </ng-template>
-
-<div class="w-full p-4 md:p-8">
-  <table class="block w-full md:table border-collapse" role="table">
-    <thead class="hidden md:table-header-group">
-      <tr>
-        @for (col of columns(); track col.key) {
-          <th scope="col" class="px-6 py-4">{{ col.header }}</th>
-        }
-      </tr>
-    </thead>
-
-    <tbody class="block md:table-row-group md:divide-y md:divide-slate-100">
-      @if (isLoading()) {
-        @for (i of [1, 2, 3, 4, 5]; track $index) {
-          <ng-container *ngTemplateOutlet="skeletonRow"></ng-container>
-        }
-      } @else {
-        @for (row of data(); track $index) {
-          <ng-container *ngTemplateOutlet="dataRow; context: { $implicit: row }"></ng-container>
-        } @empty {
-          <tr class="block md:table-row">
-            <td
-              [attr.colspan]="columns().length"
-              class="block md:table-cell p-8 text-center italic text-slate-400 bg-white rounded-xl md:rounded-none border border-slate-200 md:border-0 shadow-sm md:shadow-none"
-            >
-              {{ config.i18n.emptyTable }}
-            </td>
-          </tr>
-        }
-      }
-    </tbody>
-  </table>
-</div>

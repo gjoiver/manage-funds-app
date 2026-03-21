@@ -1,9 +1,11 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { HomePageConfig } from './home.config';
+import { HomePageConfig, TableConfig } from './home.config';
 import { FundEntity } from '@funds/core/entities';
 import { FundsInteractor } from '@funds/core/interactor/funds.interactor';
 import { TableComponent } from '@shared/components';
 import { GetFundsUseCase, SubscribeFundUseCase } from '@funds/core/usecases';
+import { BaseButtonComponent } from '@shared/components/base-button/base-button.component';
+import { ColumnDef } from '@shared/entities';
 
 @Component({
   selector: 'app-home',
@@ -15,6 +17,7 @@ import { GetFundsUseCase, SubscribeFundUseCase } from '@funds/core/usecases';
 })
 export class HomePage implements OnInit {
   public config = HomePageConfig;
+  public tableCols = TableConfig(this);
   protected funds = signal<FundEntity[]>([]);
   protected isLoading = signal<boolean>(false);
 
@@ -38,7 +41,7 @@ export class HomePage implements OnInit {
     }
   }
 
-  public onFundSelected(event: any) {
+  public onFundSelected(event: FundEntity) {
     console.log(event);
   }
 }
