@@ -1,98 +1,96 @@
-<div class="w-full">
-  <table class="block w-full md:table border-collapse text-left text-sm" role="table">
-    <thead class="hidden md:table-header-group bg-blue-50 text-gray-600 border-b border-gray-200">
+<ng-template #mobileLabel let-col>
+  <span class="md:hidden text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+    {{ col.header }}
+  </span>
+</ng-template>
+
+<ng-template #skeletonRow>
+  <tr
+    class="block md:table-row mb-4 md:mb-0 bg-white rounded-xl md:rounded-none shadow-sm md:shadow-none border border-slate-200 md:border-0 md:border-b md:border-slate-100"
+    role="row"
+    aria-hidden="true"
+  >
+    @for (col of columns(); track col.key) {
+      <td
+        class="flex justify-between items-center md:table-cell px-4 py-3 md:px-6 md:py-4 border-b border-slate-50 md:border-0 last:border-0"
+      >
+        <ng-container *ngTemplateOutlet="mobileLabel; context: { $implicit: col }"></ng-container>
+
+        <div class="text-right md:text-left">
+          @switch (col.type) {
+            @case ('currency') {
+              <div class="h-4 w-24 bg-slate-200 animate-pulse rounded-full"></div>
+            }
+            @case ('custom') {
+              <div class="h-5 w-20 bg-slate-200 animate-pulse rounded-full"></div>
+            }
+            @default {
+              <div class="h-4 w-24 md:w-48 bg-slate-200 animate-pulse rounded-full"></div>
+            }
+          }
+        </div>
+      </td>
+    }
+  </tr>
+</ng-template>
+
+<ng-template #dataRow let-row>
+  <tr
+    class="block md:table-row mb-4 md:mb-0 bg-white rounded-xl md:rounded-none shadow-sm md:shadow-none border border-slate-200 md:border-0 hover:bg-slate-50 transition-colors cursor-pointer"
+    (click)="onRowClick(row)"
+    role="row"
+  >
+    @for (col of columns(); track col.key) {
+      <td
+        class="flex justify-between items-center md:table-cell px-4 py-3 md:px-6 md:py-4 border-b border-slate-50 md:border-0 last:border-0"
+      >
+        <ng-container *ngTemplateOutlet="mobileLabel; context: { $implicit: col }"></ng-container>
+
+        <div class="text-right md:text-left">
+          @switch (col.type) {
+            @case ('currency') {
+              <span class="font-medium text-slate-900 tabular-nums">
+                {{ getCellValue(row, col.key) | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+              </span>
+            }
+            @case ('date') {
+              <span class="text-slate-500">
+                {{ getCellValue(row, col.key) | date: 'dd/MM/yyyy HH:mm' }}
+              </span>
+            }
+            @default {
+              {{ getCellValue(row, col.key) }}
+            }
+          }
+        </div>
+      </td>
+    }
+  </tr>
+</ng-template>
+
+<div class="w-full p-4 md:p-8">
+  <table class="block w-full md:table border-collapse" role="table">
+    <thead class="hidden md:table-header-group">
       <tr>
         @for (col of columns(); track col.key) {
-          <th scope="col" class="px-6 py-4 font-bold uppercase tracking-wider text-xs">
-            {{ col.header }}
-          </th>
+          <th scope="col" class="px-6 py-4">{{ col.header }}</th>
         }
       </tr>
     </thead>
 
-    <tbody
-      class="block md:table-row-group bg-transparent md:bg-white md:divide-y md:divide-gray-100"
-    >
+    <tbody class="block md:table-row-group md:divide-y md:divide-slate-100">
       @if (isLoading()) {
         @for (i of [1, 2, 3, 4, 5]; track $index) {
-          <tr
-            class="block md:table-row mb-4 md:mb-0 bg-white rounded-xl md:rounded-none shadow-sm md:shadow-none border border-slate-200 md:border-0 md:border-b md:border-slate-100"
-            role="row"
-            aria-hidden="true"
-          >
-            @for (col of columns(); track col.key) {
-              <td
-                class="flex justify-between items-center md:table-cell px-4 py-3 md:px-6 md:py-4 border-b border-slate-50 md:border-0 last:border-0"
-              >
-                <span
-                  class="md:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider"
-                >
-                  {{ col.header }}
-                </span>
-
-                <div class="text-right md:text-left">
-                  @switch (col.type) {
-                    @case ('currency') {
-                      <div class="h-4 w-24 bg-slate-200 animate-pulse rounded-full"></div>
-                    }
-                    @case ('custom') {
-                      <div class="h-5 w-20 bg-slate-200 animate-pulse rounded-full"></div>
-                    }
-                    @default {
-                      <div class="h-4 w-24 md:w-48 bg-slate-200 animate-pulse rounded-full"></div>
-                    }
-                  }
-                </div>
-              </td>
-            }
-          </tr>
+          <ng-container *ngTemplateOutlet="skeletonRow"></ng-container>
         }
       } @else {
         @for (row of data(); track $index) {
-          <tr
-            class="block md:table-row mb-4 md:mb-0 bg-white rounded-xl md:rounded-none shadow-sm md:shadow-none border border-gray-200 md:border-0 hover:bg-gray-50 transition-colors cursor-pointer"
-            (click)="onRowClick(row)"
-            role="row"
-          >
-            @for (col of columns(); track col.key) {
-              <td
-                class="flex justify-between items-center md:table-cell px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-700 border-b border-gray-50 md:border-0 last:border-0"
-              >
-                <span
-                  class="md:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider"
-                >
-                  {{ col.header }}
-                </span>
-
-                <div class="text-right md:text-left">
-                  @switch (col.type) {
-                    @case ('currency') {
-                      <span class="font-medium text-gray-900 tabular-nums">
-                        {{
-                          getCellValue(row, col.key) | currency: 'COP' : 'symbol-narrow' : '1.0-0'
-                        }}
-                      </span>
-                    }
-
-                    @case ('date') {
-                      <span class="text-gray-500">
-                        {{ getCellValue(row, col.key) | date: 'dd/MM/yyyy HH:mm' }}
-                      </span>
-                    }
-
-                    @default {
-                      {{ getCellValue(row, col.key) }}
-                    }
-                  }
-                </div>
-              </td>
-            }
-          </tr>
+          <ng-container *ngTemplateOutlet="dataRow; context: { $implicit: row }"></ng-container>
         } @empty {
           <tr class="block md:table-row">
             <td
               [attr.colspan]="columns().length"
-              class="block md:table-cell px-6 py-12 text-center text-gray-400 italic bg-white rounded-xl md:rounded-none border border-gray-200 md:border-0 shadow-sm md:shadow-none"
+              class="block md:table-cell p-8 text-center italic text-slate-400 bg-white rounded-xl md:rounded-none border border-slate-200 md:border-0 shadow-sm md:shadow-none"
             >
               {{ config.i18n.emptyTable }}
             </td>

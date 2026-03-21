@@ -1,1 +1,11 @@
 @use 'tailwindcss';
+
+@layer base {
+  body {
+    @apply text-slate-700 antialiased text-sm;
+  }
+
+  th {
+    @apply font-bold uppercase tracking-wider text-xs text-slate-500 bg-slate-50 border-b border-slate-200;
+  }
+}

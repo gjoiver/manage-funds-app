@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { ColumnDef } from '@shared/entities';
 import { TableComponentConfig } from './table.config';
@@ -9,7 +9,7 @@ import { TableComponentConfig } from './table.config';
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CurrencyPipe, DatePipe],
+  imports: [CurrencyPipe, DatePipe, NgTemplateOutlet],
 })
 export class TableComponent<T> {
   public config = TableComponentConfig;
