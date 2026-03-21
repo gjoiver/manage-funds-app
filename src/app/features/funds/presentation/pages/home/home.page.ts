@@ -16,6 +16,7 @@ import { GetFundsUseCase, SubscribeFundUseCase } from '@funds/core/usecases';
 export class HomePage implements OnInit {
   public config = HomePageConfig;
   protected funds = signal<FundEntity[]>([]);
+  protected isLoading = signal<boolean>(false);
 
   private readonly fundsInteractor = inject(FundsInteractor);
 
@@ -25,11 +26,19 @@ export class HomePage implements OnInit {
 
   private async getFunds(): Promise<void> {
     try {
+      this.isLoading.set(true);
       const response = await this.fundsInteractor.getFunds();
 
       this.funds.set(response);
+      this.isLoading.set(false);
     } catch (error) {
       console.error(error);
+    } finally {
+      this.isLoading.set(false);
     }
+  }
+
+  public onFundSelected(event: any) {
+    console.log(event);
   }
 }

@@ -1,3 +1,7 @@
-<div class="home-funds">
-  <app-table [data]="funds()" [columns]="config.tableConfig"> </app-table>
-</div>
+<app-table
+  [data]="funds()"
+  [columns]="config.tableConfig"
+  [isLoading]="isLoading()"
+  (rowClick)="onFundSelected($event)"
+>
+</app-table>

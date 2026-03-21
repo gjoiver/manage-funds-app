@@ -1,45 +1,103 @@
-<div class="overflow-x-auto p-8">
-  <table class="w-full border-collapse text-left text-sm" role="table">
-    <thead class="bg-blue-50 text-gray-600">
+<div class="w-full">
+  <table class="block w-full md:table border-collapse text-left text-sm" role="table">
+    <thead class="hidden md:table-header-group bg-blue-50 text-gray-600 border-b border-gray-200">
       <tr>
         @for (col of columns(); track col.key) {
-          <th scope="col">
+          <th scope="col" class="px-6 py-4 font-bold uppercase tracking-wider text-xs">
             {{ col.header }}
           </th>
         }
       </tr>
     </thead>
-    <tbody class="divide-y divide-gray-100 bg-white">
-      @for (row of data(); track $index) {
-        <tr
-          class="hover:bg-gray-50 transition-colors cursor-pointer"
-          (click)="onRowClick(row)"
-          role="row"
-        >
-          @for (col of columns(); track col.key) {
-            <td>
-              @switch (col.type) {
-                @case ('currency') {
-                  <span class="font-medium text-gray-900">
-                    {{ getCellValue(row, col.key) | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
-                  </span>
-                }
-                @case ('date') {
-                  {{ getCellValue(row, col.key) | date: 'dd/MM/yyyy HH:mm' }}
-                }
-                @default {
-                  {{ getCellValue(row, col.key) }}
-                }
-              }
+
+    <tbody
+      class="block md:table-row-group bg-transparent md:bg-white md:divide-y md:divide-gray-100"
+    >
+      @if (isLoading()) {
+        @for (i of [1, 2, 3, 4, 5]; track $index) {
+          <tr
+            class="block md:table-row mb-4 md:mb-0 bg-white rounded-xl md:rounded-none shadow-sm md:shadow-none border border-slate-200 md:border-0 md:border-b md:border-slate-100"
+            role="row"
+            aria-hidden="true"
+          >
+            @for (col of columns(); track col.key) {
+              <td
+                class="flex justify-between items-center md:table-cell px-4 py-3 md:px-6 md:py-4 border-b border-slate-50 md:border-0 last:border-0"
+              >
+                <span
+                  class="md:hidden text-[10px] font-bold text-gray-400 uppercase tracking-wider"
+                >
+                  {{ col.header }}
+                </span>
+
+                <div class="text-right md:text-left">
+                  @switch (col.type) {
+                    @case ('currency') {
+                      <div class="h-4 w-24 bg-slate-200 animate-pulse rounded-full"></div>
+                    }
+                    @case ('custom') {
+                      <div class="h-5 w-20 bg-slate-200 animate-pulse rounded-full"></div>
+                    }
+                    @default {
+                      <div class="h-4 w-24 md:w-48 bg-slate-200 animate-pulse rounded-full"></div>
+                    }
+                  }
+                </div>
+              </td>
+            }
+          </tr>
+        }
+      } @else {
+        @for (row of data(); track $index) {
+          <tr
+            class="block md:table-row mb-4 md:mb-0 bg-white rounded-xl md:rounded-none shadow-sm md:shadow-none border border-gray-200 md:border-0 hover:bg-gray-50 transition-colors cursor-pointer"
+            (click)="onRowClick(row)"
+            role="row"
+          >
+            @for (col of columns(); track col.key) {
+              <td
+                class="flex justify-between items-center md:table-cell px-4 py-3 md:px-6 md:py-4 whitespace-nowrap text-gray-700 border-b border-gray-50 md:border-0 last:border-0"
+              >
+                <span
+                  class="md:hidden text-[10px] font-bold text-gray-500 uppercase tracking-wider"
+                >
+                  {{ col.header }}
+                </span>
+
+                <div class="text-right md:text-left">
+                  @switch (col.type) {
+                    @case ('currency') {
+                      <span class="font-medium text-gray-900 tabular-nums">
+                        {{
+                          getCellValue(row, col.key) | currency: 'COP' : 'symbol-narrow' : '1.0-0'
+                        }}
+                      </span>
+                    }
+
+                    @case ('date') {
+                      <span class="text-gray-500">
+                        {{ getCellValue(row, col.key) | date: 'dd/MM/yyyy HH:mm' }}
+                      </span>
+                    }
+
+                    @default {
+                      {{ getCellValue(row, col.key) }}
+                    }
+                  }
+                </div>
+              </td>
+            }
+          </tr>
+        } @empty {
+          <tr class="block md:table-row">
+            <td
+              [attr.colspan]="columns().length"
+              class="block md:table-cell px-6 py-12 text-center text-gray-400 italic bg-white rounded-xl md:rounded-none border border-gray-200 md:border-0 shadow-sm md:shadow-none"
+            >
+              {{ config.i18n.emptyTable }}
             </td>
-          }
-        </tr>
-      } @empty {
-        <tr>
-          <td [attr.colspan]="columns().length" class="px-6 py-12 text-center text-gray-400 italic">
-            No se encontraron registros disponibles.
-          </td>
-        </tr>
+          </tr>
+        }
       }
     </tbody>
   </table>
