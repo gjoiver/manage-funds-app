@@ -1,1 +1,0 @@
-export type FundTypes = 'FPV' | 'FIC';

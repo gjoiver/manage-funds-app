@@ -1,2 +1,2 @@
-export * from './fund.types';
+export * from './fund-categories';
 export * from './fund.entity';

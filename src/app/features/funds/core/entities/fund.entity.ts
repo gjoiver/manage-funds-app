@@ -1,11 +1,11 @@
 import { ResponseEntity } from '@shared/entities';
-import { FundTypes } from './fund.types';
+import { FundCategory } from './fund-categories';
 
 export interface FundEntity {
   id: string;
   name: string;
   minAmmount: number;
-  category: FundTypes;
+  category: FundCategory;
 }
 
 export interface FundsResponse extends ResponseEntity<FundEntity[]> {}

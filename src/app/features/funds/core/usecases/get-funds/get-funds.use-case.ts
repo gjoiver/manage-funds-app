@@ -1,7 +1,8 @@
-import { inject } from '@angular/core';
-import { FundsRepository } from '../repositories/funds.repository';
-import { FundEntity } from '../entities';
+import { inject, Injectable } from '@angular/core';
+import { FundsRepository } from '../../repositories/funds.repository';
+import { FundEntity } from '../../entities';
 
+@Injectable()
 export class GetFundsUseCase {
   private readonly fundsRepository = inject(FundsRepository);
 
