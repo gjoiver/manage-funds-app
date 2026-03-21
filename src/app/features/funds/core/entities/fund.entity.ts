@@ -2,9 +2,9 @@ import { ResponseEntity } from '@shared/entities';
 import { FundCategory } from './fund-categories';
 
 export interface FundEntity {
-  id: string;
+  id: number;
   name: string;
-  minAmmount: number;
+  minAmount: number;
   category: FundCategory;
 }
 
