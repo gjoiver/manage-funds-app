@@ -1,0 +1,46 @@
+<div class="overflow-x-auto p-8">
+  <table class="w-full border-collapse text-left text-sm" role="table">
+    <thead class="bg-blue-50 text-gray-600">
+      <tr>
+        @for (col of columns(); track col.key) {
+          <th scope="col">
+            {{ col.header }}
+          </th>
+        }
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-100 bg-white">
+      @for (row of data(); track $index) {
+        <tr
+          class="hover:bg-gray-50 transition-colors cursor-pointer"
+          (click)="onRowClick(row)"
+          role="row"
+        >
+          @for (col of columns(); track col.key) {
+            <td>
+              @switch (col.type) {
+                @case ('currency') {
+                  <span class="font-medium text-gray-900">
+                    {{ getCellValue(row, col.key) | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+                  </span>
+                }
+                @case ('date') {
+                  {{ getCellValue(row, col.key) | date: 'dd/MM/yyyy HH:mm' }}
+                }
+                @default {
+                  {{ getCellValue(row, col.key) }}
+                }
+              }
+            </td>
+          }
+        </tr>
+      } @empty {
+        <tr>
+          <td [attr.colspan]="columns().length" class="px-6 py-12 text-center text-gray-400 italic">
+            No se encontraron registros disponibles.
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
