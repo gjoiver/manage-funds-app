@@ -4,7 +4,13 @@ import { HomePage } from './home.page';
 import { ColumnDef } from '@shared/entities';
 import { BaseButtonComponent } from '@shared/components';
 
-export const HomePageConfig = Object.freeze({});
+export const HomePageConfig = Object.freeze({
+  i18n: {
+    balanceTitle: 'Saldo total',
+    availableFunds: 'Fondos disponibles',
+    descriptionFunds: 'Explora y vincúlate a nuestros fondos de inversión.',
+  },
+});
 
 export const TableConfig = (componentRef: HomePage): ColumnDef<FundEntity>[] => [
   { header: 'Fondo', key: 'name', type: 'text' },
@@ -18,7 +24,7 @@ export const TableConfig = (componentRef: HomePage): ColumnDef<FundEntity>[] => 
       class: BaseButtonComponent,
       inputs: {
         label: componentRef.hasSubscription(row) ? 'Retirarse' : 'Subscribirse',
-        buttonClick: () => componentRef.subscribeFund(row),
+        buttonClick: () => componentRef.handleSubscription(row),
       },
     }),
   },

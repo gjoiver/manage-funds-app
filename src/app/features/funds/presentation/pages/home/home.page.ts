@@ -1,26 +1,30 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { HomePageConfig, TableConfig } from './home.config';
 import { FundEntity } from '@funds/core/entities';
 import { FundsInteractor } from '@funds/core/interactor/funds.interactor';
 import { TableComponent } from '@shared/components';
-import { GetFundsUseCase, SubscribeFundUseCase } from '@funds/core/usecases';
-import { BaseButtonComponent } from '@shared/components/base-button/base-button.component';
-import { ColumnDef } from '@shared/entities';
+import {
+  GetFundsUseCase,
+  SubscribeFundUseCase,
+  UnsubscribeFundUseCase,
+} from '@funds/core/usecases';
 import { AccountStore } from '@funds/core/store/account.store';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
-  providers: [FundsInteractor, GetFundsUseCase, SubscribeFundUseCase],
-  imports: [TableComponent],
+  providers: [FundsInteractor, GetFundsUseCase, SubscribeFundUseCase, UnsubscribeFundUseCase],
+  imports: [TableComponent, CurrencyPipe],
 })
 export class HomePage implements OnInit {
   public config = HomePageConfig;
   public tableCols = TableConfig(this);
   protected funds = signal<FundEntity[]>([]);
   protected isLoading = signal<boolean>(false);
+  protected balance = computed(() => this.accountStore.getBalance());
   private readonly accountStore = inject(AccountStore);
   private readonly fundsInteractor = inject(FundsInteractor);
 
@@ -28,35 +32,22 @@ export class HomePage implements OnInit {
     this.getFunds();
   }
 
-  public async subscribeFund(fund: FundEntity): Promise<void> {
-    try {
-      // TO DO: Crear loading
-
-      if (!this.hasEnoughBalance(fund)) {
-        // TO DO: Cambiarlo por una modal
-        console.log('No tienes fondos suficientes');
-
-        return;
-      }
-
-      if (this.hasSubscription(fund)) {
-        console.log('Ya estas subscrito a este fondo');
-
-        return;
-      }
-      await this.fundsInteractor.subscribeFunds(fund.id);
-      this.accountStore.subscribeToFund(fund);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   public hasEnoughBalance(fund: FundEntity): boolean {
-    return this.accountStore.hasEnoughBalance(fund);
+    return this.accountStore.hasEnoughBalance(fund.minAmount);
   }
 
   public hasSubscription(fund: FundEntity): boolean {
-    return this.accountStore.hasSubscription(fund);
+    return this.accountStore.hasSubscription(fund.id);
+  }
+
+  public handleSubscription(fund: FundEntity) {
+    if (this.hasSubscription(fund)) {
+      this.unsubscribeFund(fund);
+
+      return;
+    }
+
+    this.subscribeFund(fund);
   }
 
   private async getFunds(): Promise<void> {
@@ -65,6 +56,42 @@ export class HomePage implements OnInit {
       const response = await this.fundsInteractor.getFunds();
 
       this.funds.set(response);
+      this.isLoading.set(false);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
+
+  private async subscribeFund(fund: FundEntity): Promise<void> {
+    if (!this.hasEnoughBalance(fund)) {
+      // TO DO: Cambiarlo por una modal
+      console.log('No tienes fondos suficientes');
+
+      return;
+    }
+    try {
+      this.isLoading.set(true);
+      // TO DO: Crear loading
+      await this.fundsInteractor.subscribeFund(fund.id);
+      this.accountStore.subscribeToFund(fund);
+
+      this.isLoading.set(false);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
+
+  private async unsubscribeFund(fund: FundEntity): Promise<void> {
+    try {
+      this.isLoading.set(true);
+      // TO DO: Crear loading
+      await this.fundsInteractor.unsubscribeFund(fund.id);
+      this.accountStore.unsubscribeFund(fund);
+
       this.isLoading.set(false);
     } catch (error) {
       console.error(error);

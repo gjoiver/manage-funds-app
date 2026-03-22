@@ -14,16 +14,21 @@ export class AccountStore {
     return this.subscribedFunds();
   }
 
-  public hasEnoughBalance(fund: FundEntity): boolean {
-    return this.getBalance() >= fund.minAmount;
+  public hasEnoughBalance(minAmount: number): boolean {
+    return this.getBalance() >= minAmount;
   }
 
-  public hasSubscription(fund: FundEntity): boolean {
-    return this.getSubscribedFunds().some((subsFund) => subsFund.id === fund.id);
+  public hasSubscription(id: number): boolean {
+    return this.getSubscribedFunds().some((subsFund) => subsFund.id === id);
   }
 
   public subscribeToFund(fund: FundEntity): void {
     this.balance.update((balance) => balance - fund.minAmount);
     this.subscribedFunds.update((funds) => [...funds, fund]);
+  }
+
+  public unsubscribeFund(fund: FundEntity): void {
+    this.balance.update((currentBalance) => currentBalance + fund.minAmount);
+    this.subscribedFunds.update((funds) => funds.filter((subsFund) => subsFund.id !== fund.id));
   }
 }

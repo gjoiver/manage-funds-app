@@ -1,14 +1,16 @@
-<div class="w-full p-4 md:p-8">
-  <table class="block w-full md:table border-collapse" role="table">
-    <thead class="hidden md:table-header-group">
+<div class="w-full">
+  <table class="block w-full md:table text-sm text-left border-collapse" role="table">
+    <thead
+      class="hidden md:table-header-group text-xs text-slate-500 bg-slate-50 uppercase border-b"
+    >
       <tr>
         @for (col of columns(); track col.key) {
-          <th scope="col" class="px-6 py-4">{{ col.header }}</th>
+          <th scope="col" class="p-4 font-semibold">{{ col.header }}</th>
         }
       </tr>
     </thead>
 
-    <tbody class="block md:table-row-group md:divide-y md:divide-slate-100">
+    <tbody class="block md:table-row-group">
       @if (isLoading()) {
         @for (i of [1, 2, 3, 4, 5]; track $index) {
           <ng-container *ngTemplateOutlet="skeletonRow"></ng-container>
@@ -17,10 +19,10 @@
         @for (row of data(); track $index) {
           <ng-container *ngTemplateOutlet="dataRow; context: { $implicit: row }"></ng-container>
         } @empty {
-          <tr class="block md:table-row">
+          <tr class="block md:table-row border-b md:border-0">
             <td
               [attr.colspan]="columns().length"
-              class="block md:table-cell p-8 text-center italic text-slate-400 bg-white rounded-xl md:rounded-none border border-slate-200 md:border-0 shadow-sm md:shadow-none"
+              class="block md:table-cell p-8 text-center text-slate-400 italic"
             >
               {{ config.i18n.emptyTable }}
             </td>
@@ -32,33 +34,29 @@
 </div>
 
 <ng-template #mobileLabel let-col>
-  <span class="md:hidden text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+  <span class="md:hidden text-[10px] text-slate-400 font-bold uppercase tracking-wider">
     {{ col.header }}
   </span>
 </ng-template>
 
 <ng-template #skeletonRow>
-  <tr
-    class="block md:table-row mb-4 md:mb-0 bg-white rounded-xl md:rounded-none shadow-sm md:shadow-none border border-slate-200 md:border-0 md:border-b md:border-slate-100"
-    role="row"
-    aria-hidden="true"
-  >
+  <tr class="block md:table-row border-b md:border-b-slate-100" role="row" aria-hidden="true">
     @for (col of columns(); track col.key) {
       <td
-        class="flex justify-between items-center md:table-cell px-4 py-3 md:px-6 md:py-4 border-b border-slate-50 md:border-0 last:border-0"
+        class="flex justify-between items-center md:table-cell p-4 border-b md:border-0 last:border-0"
       >
         <ng-container *ngTemplateOutlet="mobileLabel; context: { $implicit: col }"></ng-container>
 
         <div class="text-right md:text-left">
           @switch (col.type) {
             @case ('currency') {
-              <div class="h-4 w-24 bg-slate-200 animate-pulse rounded-full"></div>
+              <div class="h-4 w-20 bg-slate-200 animate-pulse rounded"></div>
             }
             @case ('custom') {
-              <div class="h-5 w-20 bg-slate-200 animate-pulse rounded-full"></div>
+              <div class="h-6 w-24 bg-slate-200 animate-pulse rounded"></div>
             }
             @default {
-              <div class="h-4 w-24 md:w-48 bg-slate-200 animate-pulse rounded-full"></div>
+              <div class="h-4 w-32 bg-slate-200 animate-pulse rounded"></div>
             }
           }
         </div>
@@ -69,32 +67,35 @@
 
 <ng-template #dataRow let-row>
   <tr
-    class="block md:table-row mb-4 md:mb-0 bg-white rounded-xl md:rounded-none shadow-sm md:shadow-none border border-slate-200 md:border-0"
+    class="block md:table-row border-b border-slate-200 md:border-b-slate-100 hover:bg-slate-50 transition-colors"
     role="row"
   >
     @for (col of columns(); track col.key) {
       <td
-        class="flex justify-between items-center md:table-cell px-4 py-3 md:px-6 md:py-4 border-b border-slate-50 md:border-0 last:border-0"
+        class="flex justify-between items-center md:table-cell p-4 border-b border-slate-50 md:border-0 last:border-0"
       >
         <ng-container *ngTemplateOutlet="mobileLabel; context: { $implicit: col }"></ng-container>
 
         <div class="text-right md:text-left">
           @switch (col.type) {
             @case ('currency') {
-              <span class="font-medium text-slate-900 tabular-nums">
+              <span class="font-medium tabular-nums">
                 {{ getCellValue(row, col.key) | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
               </span>
             }
+
             @case ('date') {
               <span class="text-slate-500">
                 {{ getCellValue(row, col.key) | date: 'dd/MM/yyyy HH:mm' }}
               </span>
             }
+
             @case ('custom') {
               @if (getDynamicCell(col, row, $index); as cell) {
                 <ng-container *ngComponentOutlet="cell.class; inputs: cell.inputs"></ng-container>
               }
             }
+
             @default {
               {{ getCellValue(row, col.key) }}
             }

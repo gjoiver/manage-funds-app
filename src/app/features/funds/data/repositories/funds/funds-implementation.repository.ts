@@ -13,4 +13,8 @@ export class FundsImplementationRepository implements FundsRepository {
   public subscribeFund(_id: number): Promise<void> {
     return lastValueFrom(of(undefined).pipe(delay(1500)));
   }
+
+  public unsubscribeFund(id: number): Promise<void> {
+    return lastValueFrom(of(undefined).pipe(delay(1500)));
+  }
 }
