@@ -1,5 +1,13 @@
 @use 'tailwindcss';
 
+@theme {
+  --color-brand-primary: #1e3a8a;
+  --color-brand-secondary: #64748b;
+  --color-brand-danger: #e11d48;
+  --color-brand-surface: #f8fafc;
+  --color-brand-border: #e2e8f0;
+}
+
 @layer base {
   body {
     @apply text-slate-700 antialiased text-sm;

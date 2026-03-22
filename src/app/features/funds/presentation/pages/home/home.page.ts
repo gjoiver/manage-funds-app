@@ -80,6 +80,7 @@ export class HomePage implements OnInit {
 
       this.loadingService.hide();
     } catch (error) {
+      //TO DO: Implementar toast
       console.error(error);
     } finally {
       this.loadingService.hide();

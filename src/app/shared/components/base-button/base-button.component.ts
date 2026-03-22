@@ -13,16 +13,16 @@ export class BaseButtonComponent {
   public buttonClick = input<() => void>();
   public computedClasses = computed(() => {
     const baseClass =
-      'px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-colors focus:outline-none focus:ring-2';
+      'cursor-pointer px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-colors focus:outline-none focus:ring-2';
 
     switch (this.style()) {
       case BUTTONS.Secondary:
-        return `${baseClass} text-slate-500 hover:bg-slate-200 focus:ring-slate-300`;
+        return `${baseClass} text-brand-secondary bg-transparent hover:bg-brand-surface focus:ring-brand-border`;
       case BUTTONS.Danger:
-        return `${baseClass} text-white bg-rose-600 hover:bg-rose-700 focus:ring-rose-400 shadow-sm`;
+        return `${baseClass} text-white bg-brand-danger hover:opacity-90 focus:ring-brand-danger shadow-sm`;
       case BUTTONS.Primary:
       default:
-        return `${baseClass} text-white bg-slate-900 hover:bg-slate-800 focus:ring-slate-400 shadow-sm`;
+        return `${baseClass} text-white bg-brand-primary hover:opacity-90 focus:ring-brand-primary shadow-sm`;
     }
   });
 
