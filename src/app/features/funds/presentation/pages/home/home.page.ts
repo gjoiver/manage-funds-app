@@ -1,4 +1,5 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { HomePageConfig, TableConfig } from './home.config';
 import { FundEntity } from '@funds/core/entities';
 import { FundsInteractor } from '@funds/core/interactor/funds.interactor';
@@ -11,6 +12,8 @@ import {
 import { AccountStore } from '@funds/core/store/account.store';
 import { CurrencyPipe } from '@angular/common';
 import { LoadingService, ModalService } from '@shared/services';
+import { BaseButtonComponent } from '@shared/components/base-button/base-button.component';
+import { BUTTONS } from '@shared/constants';
 
 @Component({
   selector: 'app-home',
@@ -18,11 +21,12 @@ import { LoadingService, ModalService } from '@shared/services';
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
   providers: [FundsInteractor, GetFundsUseCase, SubscribeFundUseCase, UnsubscribeFundUseCase],
-  imports: [TableComponent, CurrencyPipe],
+  imports: [TableComponent, CurrencyPipe, BaseButtonComponent],
 })
 export class HomePage implements OnInit {
   public config = HomePageConfig;
   public tableCols = TableConfig(this);
+  protected readonly BUTTONS = BUTTONS;
   protected funds = signal<FundEntity[]>([]);
   protected isLoading = signal<boolean>(false);
   protected balance = computed(() => this.accountStore.getBalance());
@@ -30,6 +34,7 @@ export class HomePage implements OnInit {
   private readonly fundsInteractor = inject(FundsInteractor);
   private readonly loadingService = inject(LoadingService);
   private readonly modalService = inject(ModalService);
+  private readonly router = inject(Router);
 
   public ngOnInit(): void {
     this.getFunds();
@@ -76,7 +81,7 @@ export class HomePage implements OnInit {
     try {
       this.loadingService.show();
       await this.fundsInteractor.subscribeFund(fund.id);
-      this.accountStore.subscribeToFund(fund);
+      this.accountStore.subscribeToFund(fund, 'email');
 
       this.loadingService.hide();
     } catch (error) {
@@ -99,6 +104,10 @@ export class HomePage implements OnInit {
     } finally {
       this.loadingService.hide();
     }
+  }
+
+  protected navigateToHistory(): void {
+    this.router.navigate(['/transacciones']);
   }
 
   private showNotEnoughMoneyModal() {

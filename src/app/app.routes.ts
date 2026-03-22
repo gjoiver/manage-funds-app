@@ -9,6 +9,15 @@ export const routes: Routes = [
   {
     path: 'fondos',
     loadChildren: () =>
-      import('./features/funds/presentation/funds.routes').then((m) => m.FUNDS_ROUTES),
+      import('./features/funds/presentation/funds.routes').then(
+        (m) => m.FUNDS_ROUTES,
+      ),
+  },
+  {
+    path: 'transacciones',
+    loadChildren: () =>
+      import(
+        './features/transactions/presentation/transactions.routes'
+      ).then((m) => m.TRANSACTIONS_ROUTES),
   },
 ];

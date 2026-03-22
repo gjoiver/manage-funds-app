@@ -17,7 +17,8 @@
     "module": "preserve",
     "paths": {
       "@funds/*": ["src/app/features/funds/*"],
-      "@shared/*": ["src/app/shared/*"]
+      "@shared/*": ["src/app/shared/*"],
+      "@transactions/*": ["src/app/features/transactions/*"]
     }
   },
   "angularCompilerOptions": {

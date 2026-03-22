@@ -1,6 +1,6 @@
 import { Component, computed, input } from '@angular/core';
 import { BUTTONS } from '@shared/constants';
-import { ButtonTypes } from '@shared/entities';
+import { ButtonEntity } from '@shared/entities';
 import { BaseButtonConfig } from './base-button.config';
 
 @Component({
@@ -10,7 +10,7 @@ import { BaseButtonConfig } from './base-button.config';
 })
 export class BaseButtonComponent {
   public label = input.required<string>();
-  public style = input<ButtonTypes>(BUTTONS.Primary);
+  public style = input<ButtonEntity>(BUTTONS.Primary);
   public buttonClick = input<() => void>();
 
   public computedClasses = computed(

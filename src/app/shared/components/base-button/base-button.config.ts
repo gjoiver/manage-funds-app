@@ -1,5 +1,5 @@
 import { BUTTONS } from '@shared/constants';
-import { ButtonTypes } from '@shared/entities';
+import { ButtonEntity } from '@shared/entities';
 
 export const BaseButtonConfig = Object.freeze({
   baseClasses:
@@ -12,5 +12,5 @@ export const BaseButtonConfig = Object.freeze({
       'text-brand-secondary bg-transparent hover:bg-brand-surface focus:ring-brand-border',
     [BUTTONS.Danger]:
       'text-white bg-brand-danger hover:opacity-90 focus:ring-brand-danger shadow-sm',
-  } as Record<ButtonTypes, string>,
+  } as Record<ButtonEntity, string>,
 });

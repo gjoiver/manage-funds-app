@@ -1,20 +1,27 @@
 <div class="w-full max-w-6xl mx-auto p-4 md:p-8 space-y-8">
   <header class="flex flex-col md:flex-row md:items-end justify-between gap-4">
     <div class="space-y-1">
-      <h2 class="text-sm font-semibold text-slate-500 uppercase tracking-widest">
+      <h2 class="text-sm font-semibold text-brand-secondary uppercase tracking-widest">
         {{ config.i18n.balanceTitle }}
       </h2>
 
-      <p class="text-4xl md:text-5xl font-black text-slate-900 tabular-nums tracking-tight">
+      <p class="text-4xl md:text-5xl font-black text-brand-primary tabular-nums tracking-tight">
         {{ balance() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
       </p>
     </div>
+
+    <app-base-button
+      [label]="'Ver Historial'"
+      [style]="BUTTONS.Secondary"
+      [buttonClick]="navigateToHistory.bind(this)"
+    />
   </header>
 
-  <main class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-    <div class="p-6 border-b border-slate-100 bg-slate-50/50">
-      <h3 class="text-lg font-bold text-slate-800">{{ config.i18n.availableFunds }}</h3>
-      <p class="text-sm text-slate-500 mt-1">{{ config.i18n.descriptionFunds }}</p>
+  <main class="bg-white border border-brand-border rounded-xl overflow-hidden shadow-sm">
+    <div class="p-6 border-b border-brand-border bg-brand-surface">
+      <h3 class="text-lg font-bold text-brand-primary">{{ config.i18n.availableFunds }}</h3>
+
+      <p class="text-sm text-brand-secondary mt-1">{{ config.i18n.descriptionFunds }}</p>
     </div>
 
     <app-table [data]="funds()" [columns]="tableCols" [isLoading]="isLoading()"> </app-table>
