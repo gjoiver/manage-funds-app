@@ -3,12 +3,24 @@ import { FundEntity } from '@funds/core/entities';
 import { HomePage } from './home.page';
 import { ColumnDef } from '@shared/entities';
 import { BaseButtonComponent } from '@shared/components';
+import { BUTTONS } from '@shared/constants';
 
 export const HomePageConfig = Object.freeze({
   i18n: {
     balanceTitle: 'Saldo total',
     availableFunds: 'Fondos disponibles',
     descriptionFunds: 'Explora y vincúlate a nuestros fondos de inversión.',
+    modals: {
+      notEnoughMoney: {
+        title: '¡No tienes fondos suficientes!',
+        message: 'No cuentas con el monto minimo para subscribirte a este fondo',
+        buttons: [
+          {
+            text: 'Cerrar',
+          },
+        ],
+      },
+    },
   },
 });
 
@@ -23,6 +35,7 @@ export const TableConfig = (componentRef: HomePage): ColumnDef<FundEntity>[] => 
     component: (row: FundEntity, _index: number) => ({
       class: BaseButtonComponent,
       inputs: {
+        style: componentRef.hasSubscription(row) ? BUTTONS.Danger : BUTTONS.Primary,
         label: componentRef.hasSubscription(row) ? 'Retirarse' : 'Subscribirse',
         buttonClick: () => componentRef.handleSubscription(row),
       },

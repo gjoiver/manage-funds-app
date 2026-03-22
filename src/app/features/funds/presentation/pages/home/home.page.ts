@@ -10,7 +10,7 @@ import {
 } from '@funds/core/usecases';
 import { AccountStore } from '@funds/core/store/account.store';
 import { CurrencyPipe } from '@angular/common';
-import { LoadingService } from '@shared/services';
+import { LoadingService, ModalService } from '@shared/services';
 
 @Component({
   selector: 'app-home',
@@ -29,6 +29,7 @@ export class HomePage implements OnInit {
   private readonly accountStore = inject(AccountStore);
   private readonly fundsInteractor = inject(FundsInteractor);
   private readonly loadingService = inject(LoadingService);
+  private readonly modalService = inject(ModalService);
 
   public ngOnInit(): void {
     this.getFunds();
@@ -68,8 +69,7 @@ export class HomePage implements OnInit {
 
   private async subscribeFund(fund: FundEntity): Promise<void> {
     if (!this.hasEnoughBalance(fund)) {
-      // TO DO: Cambiarlo por una modal
-      console.log('No tienes fondos suficientes');
+      this.showNotEnoughMoneyModal();
 
       return;
     }
@@ -98,5 +98,9 @@ export class HomePage implements OnInit {
     } finally {
       this.loadingService.hide();
     }
+  }
+
+  private showNotEnoughMoneyModal() {
+    this.modalService.show(this.config.i18n.modals.notEnoughMoney);
   }
 }

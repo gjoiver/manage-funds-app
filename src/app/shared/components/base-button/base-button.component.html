@@ -1,7 +1,3 @@
-<button
-  type="button"
-  class="px-4 py-2 bg-slate-900 text-white text-xs font-bold rounded-lg transition-all hover:bg-slate-800 active:scale-95 shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-400"
-  (click)="handleClick($event)"
->
+<button type="button" [class]="computedClasses()" (click)="handleClick($event)">
   {{ label() }}
 </button>
