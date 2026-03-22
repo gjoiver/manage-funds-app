@@ -4,7 +4,6 @@ import {
   Component,
   contentChild,
   input,
-  output,
   TemplateRef,
 } from '@angular/core';
 import { ColumnDef, DynamicComponentCell } from '@shared/entities';

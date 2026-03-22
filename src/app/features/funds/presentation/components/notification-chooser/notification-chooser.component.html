@@ -4,14 +4,14 @@
     <app-radio-button
       name="notification"
       [value]="NOTIFICATIONS_TYPES.Email"
-      [label]="NOTIFICATIOS_LABELS.email"
+      [label]="NOTIFICATION_LABELS.email"
       [checked]="selected() === NOTIFICATIONS_TYPES.Email"
       (valueChange)="selectOption($event)"
     />
     <app-radio-button
       name="notification"
       [value]="NOTIFICATIONS_TYPES.Sms"
-      [label]="NOTIFICATIOS_LABELS.sms"
+      [label]="NOTIFICATION_LABELS.sms"
       [checked]="selected() === NOTIFICATIONS_TYPES.Sms"
       (valueChange)="selectOption($event)"
     />

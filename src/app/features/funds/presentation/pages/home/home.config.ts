@@ -47,7 +47,7 @@ export const TableConfig = (componentRef: HomePage): ColumnDef<FundEntity>[] => 
       class: BaseButtonComponent,
       inputs: {
         style: componentRef.hasSubscription(row) ? BUTTONS.Danger : BUTTONS.Primary,
-        label: componentRef.hasSubscription(row) ? 'Retirarse' : 'Subscribirse',
+        label: componentRef.hasSubscription(row) ? 'Cancelar' : 'Subscribirse',
         buttonClick: () => componentRef.handleSubscription(row),
       },
     }),

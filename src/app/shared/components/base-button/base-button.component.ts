@@ -17,7 +17,7 @@ export class BaseButtonComponent {
     () => `${BaseButtonConfig.baseClasses} ${BaseButtonConfig.buttonStyles[this.style()]}`,
   );
 
-  public handleClick(event: Event) {
+  public onClick(event: Event) {
     event.stopPropagation();
 
     const callback = this.buttonClick();

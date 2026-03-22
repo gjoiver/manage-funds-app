@@ -13,9 +13,9 @@ export class NotificationChooserComponent {
   public onSelect = input<(value: NotificationEntity) => void>();
 
   protected selected = signal<NotificationEntity>(NOTIFICATIONS_TYPES.Email);
-  protected readonly NOTIFICATIONS_TYPES = NOTIFICATIONS_TYPES;
-  protected readonly NOTIFICATIOS_LABELS = NOTIFICATION_METHOD_LABELS;
-  protected readonly title = 'Método de notificación';
+  public readonly NOTIFICATIONS_TYPES = NOTIFICATIONS_TYPES;
+  public readonly NOTIFICATION_LABELS = NOTIFICATION_METHOD_LABELS;
+  public readonly title = 'Método de notificación';
 
   protected selectOption(value: string): void {
     const notification = value as NotificationEntity;
