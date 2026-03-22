@@ -10,6 +10,7 @@ import {
 } from '@funds/core/usecases';
 import { AccountStore } from '@funds/core/store/account.store';
 import { CurrencyPipe } from '@angular/common';
+import { LoadingService } from '@shared/services';
 
 @Component({
   selector: 'app-home',
@@ -27,6 +28,7 @@ export class HomePage implements OnInit {
   protected balance = computed(() => this.accountStore.getBalance());
   private readonly accountStore = inject(AccountStore);
   private readonly fundsInteractor = inject(FundsInteractor);
+  private readonly loadingService = inject(LoadingService);
 
   public ngOnInit(): void {
     this.getFunds();
@@ -72,31 +74,29 @@ export class HomePage implements OnInit {
       return;
     }
     try {
-      this.isLoading.set(true);
-      // TO DO: Crear loading
+      this.loadingService.show();
       await this.fundsInteractor.subscribeFund(fund.id);
       this.accountStore.subscribeToFund(fund);
 
-      this.isLoading.set(false);
+      this.loadingService.hide();
     } catch (error) {
       console.error(error);
     } finally {
-      this.isLoading.set(false);
+      this.loadingService.hide();
     }
   }
 
   private async unsubscribeFund(fund: FundEntity): Promise<void> {
     try {
-      this.isLoading.set(true);
-      // TO DO: Crear loading
+      this.loadingService.show();
       await this.fundsInteractor.unsubscribeFund(fund.id);
       this.accountStore.unsubscribeFund(fund);
 
-      this.isLoading.set(false);
+      this.loadingService.hide();
     } catch (error) {
       console.error(error);
     } finally {
-      this.isLoading.set(false);
+      this.loadingService.hide();
     }
   }
 }
