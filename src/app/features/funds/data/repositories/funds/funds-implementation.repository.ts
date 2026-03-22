@@ -10,7 +10,7 @@ export class FundsImplementationRepository implements FundsRepository {
     return lastValueFrom(of(GET_FUNDS_MOCK.data).pipe(delay(1500)));
   }
 
-  public subscribeFund(_id: string): Promise<void> {
-    return lastValueFrom(of().pipe(delay(1500)));
+  public subscribeFund(_id: number): Promise<void> {
+    return lastValueFrom(of(undefined).pipe(delay(1500)));
   }
 }

@@ -11,7 +11,7 @@ export class FundsInteractor {
     return this.getFundsUseCase.execute();
   }
 
-  public subscribeFunds(id: string): Promise<void> {
+  public subscribeFunds(id: number): Promise<void> {
     return this.subscribeFundUseCase.execute(id);
   }
 }
