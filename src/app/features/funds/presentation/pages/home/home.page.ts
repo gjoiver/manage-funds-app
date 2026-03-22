@@ -13,7 +13,9 @@ import { AccountStore } from '@funds/core/store/account.store';
 import { CurrencyPipe } from '@angular/common';
 import { LoadingService, ModalService } from '@shared/services';
 import { BaseButtonComponent } from '@shared/components/base-button/base-button.component';
-import { BUTTONS } from '@shared/constants';
+import { BUTTONS, NOTIFICATIONS_TYPES } from '@shared/constants';
+import { NotificationEntity } from '@shared/entities';
+import { NotificationChooserComponent } from '@funds/presentation/components/notification-chooser/notification-chooser.component';
 
 @Component({
   selector: 'app-home',
@@ -30,6 +32,7 @@ export class HomePage implements OnInit {
   protected funds = signal<FundEntity[]>([]);
   protected isLoading = signal<boolean>(false);
   protected balance = computed(() => this.accountStore.getBalance());
+  private selectedNotification = signal<NotificationEntity>(NOTIFICATIONS_TYPES.Email);
   private readonly accountStore = inject(AccountStore);
   private readonly fundsInteractor = inject(FundsInteractor);
   private readonly loadingService = inject(LoadingService);
@@ -72,20 +75,47 @@ export class HomePage implements OnInit {
     }
   }
 
-  private async subscribeFund(fund: FundEntity): Promise<void> {
+  private subscribeFund(fund: FundEntity): void {
     if (!this.hasEnoughBalance(fund)) {
       this.showNotEnoughMoneyModal();
 
       return;
     }
+
+    this.showNotificationModal(fund);
+  }
+
+  private showNotificationModal(fund: FundEntity): void {
+    this.selectedNotification.set(NOTIFICATIONS_TYPES.Email);
+    const { title, message, buttons } = this.config.i18n.modals.notifications;
+
+    this.modalService.show({
+      title: title,
+      message: message + fund.name,
+      buttons: [
+        buttons[0],
+        {
+          ...buttons[1],
+          action: () => this.confirmSubscription(fund),
+        },
+      ],
+      contentComponent: {
+        class: NotificationChooserComponent,
+        inputs: {
+          onSelect: (value: NotificationEntity) => this.selectedNotification.set(value),
+        },
+      },
+    });
+  }
+
+  private async confirmSubscription(fund: FundEntity): Promise<void> {
     try {
       this.loadingService.show();
       await this.fundsInteractor.subscribeFund(fund.id);
-      this.accountStore.subscribeToFund(fund, 'email');
+      this.accountStore.subscribeToFund(fund, this.selectedNotification());
 
       this.loadingService.hide();
     } catch (error) {
-      //TO DO: Implementar toast
       console.error(error);
     } finally {
       this.loadingService.hide();

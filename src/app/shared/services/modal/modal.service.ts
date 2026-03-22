@@ -22,7 +22,8 @@ export class ModalService {
     this.modalRef = createComponent(ModalComponent, { environmentInjector: this.injector });
 
     this.modalRef.setInput('title', config.title);
-    this.modalRef.setInput('message', config.message);
+    if (config.message) this.modalRef.setInput('message', config.message);
+    if (config.contentComponent) this.modalRef.setInput('contentComponent', config.contentComponent);
 
     const wrappedButtons: ModalButton[] = config.buttons.map((btn) => ({
       text: btn.text,

@@ -5,7 +5,17 @@
     <div class="p-6">
       <h3 class="text-lg font-bold text-brand-primary">{{ title() }}</h3>
 
-      <p class="mt-2 text-sm text-brand-secondary leading-relaxed">{{ message() }}</p>
+      @if (message()) {
+        <p class="mt-2 text-sm text-brand-secondary leading-relaxed">{{ message() }}</p>
+      }
+      @if (contentComponent()) {
+        <div class="mt-4">
+          <ng-container
+            [ngComponentOutlet]="contentComponent()!.class"
+            [ngComponentOutletInputs]="contentComponent()!.inputs || {}"
+          />
+        </div>
+      }
     </div>
 
     <div

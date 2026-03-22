@@ -20,6 +20,17 @@ export const HomePageConfig = Object.freeze({
           },
         ],
       },
+      notifications: {
+        title: 'Suscribirse al fondo',
+        message: '¿Cómo deseas recibir las notificaciones de ',
+        buttons: [
+          { text: 'Cancelar', style: BUTTONS.Secondary },
+          {
+            text: 'Confirmar',
+            style: BUTTONS.Primary,
+          },
+        ],
+      },
     },
   },
 });
