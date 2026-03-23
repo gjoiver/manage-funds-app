@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
     "serve:ssr:manage-funds-app": "node dist/manage-funds-app/server/server.mjs"
   },
   "prettier": {
@@ -36,7 +37,8 @@
     "postcss": "^8.5.8",
     "rxjs": "~7.8.0",
     "tailwindcss": "^4.2.2",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "zone.js": "^0.16.1"
   },
   "devDependencies": {
     "@angular-eslint/eslint-plugin": "^21.3.1",
@@ -45,8 +47,10 @@
     "@angular/build": "^20.1.6",
     "@angular/cli": "^20.1.6",
     "@angular/compiler-cli": "^20.1.0",
+    "@angular/platform-browser-dynamic": "^21.2.5",
     "@types/express": "^5.0.1",
     "@types/jasmine": "~5.1.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.17.19",
     "@typescript-eslint/eslint-plugin": "^8.57.1",
     "@typescript-eslint/parser": "^8.57.1",
@@ -54,11 +58,14 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "jasmine-core": "~5.8.0",
+    "jest": "^30.3.0",
+    "jest-preset-angular": "^14.6.2",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "ts-jest": "^29.4.6",
     "typescript": "~5.8.2"
   }
 }

@@ -1,25 +1,35 @@
-import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { RouterModule } from '@angular/router';
 
-describe('App', () => {
+describe(`App`, () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [App],
-      providers: [provideZonelessChangeDetection()]
+      imports: [App, RouterModule.forRoot([])],
     }).compileComponents();
   });
 
-  it('should create the app', () => {
+  it(`Given the root component
+    When it is created
+    Then it initializes successfully`, () => {
+    // Act
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
+
+    // Assert
     expect(app).toBeTruthy();
   });
 
-  it('should render title', () => {
+  it(`Given the root component
+    When rendered
+    Then contains the sidebar`, () => {
+    // Arrange
     const fixture = TestBed.createComponent(App);
+
+    // Act
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, manage-funds-app');
+
+    // Assert
+    expect(fixture.nativeElement.querySelector('app-sidebar')).not.toBeNull();
   });
 });
