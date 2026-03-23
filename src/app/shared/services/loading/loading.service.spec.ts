@@ -2,6 +2,11 @@ import { TestBed } from '@angular/core/testing';
 import { LoadingService } from './loading.service';
 import { ApplicationRef } from '@angular/core';
 
+export class LoadingServiceMock {
+  public show = jest.fn();
+  public hide = jest.fn();
+}
+
 describe(`LoadingService`, () => {
   let service: LoadingService;
   let appRef: ApplicationRef;

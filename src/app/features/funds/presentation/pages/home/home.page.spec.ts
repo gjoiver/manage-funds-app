@@ -4,19 +4,19 @@ import { FundsInteractor } from '@funds/core/interactor/funds.interactor';
 import { AccountStore } from '@funds/core/store/account.store';
 import { ModalService } from '@shared/services';
 import { LoadingService } from '@shared/services';
-import { createModalServiceMock } from '@shared/data/mocks/modal-service.mock';
-import { createLoadingServiceMock } from '@shared/data/mocks/loading-service.mock';
 import { GET_FUNDS_MOCK } from '@funds/data/mocks';
 import { NOTIFICATIONS_TYPES } from '@shared/constants';
 import { RouterModule } from '@angular/router';
+import { LoadingServiceMock } from '@shared/services/loading/loading.service.spec';
+import { ModalServiceMock } from '@shared/services/modal/modal.service.spec';
 
 describe(`Funds HomePage`, () => {
   let fixture: ComponentFixture<HomePage>;
   let component: HomePage;
   let fundsInteractorMock: jest.Mocked<FundsInteractor>;
   let accountStore: AccountStore;
-  let modalServiceMock: jest.Mocked<ModalService>;
-  let loadingServiceMock: jest.Mocked<LoadingService>;
+  let modalServiceMock: ModalService;
+  let loadingServiceMock: LoadingService;
 
   const fund = GET_FUNDS_MOCK.data[0];
 
@@ -26,14 +26,12 @@ describe(`Funds HomePage`, () => {
       subscribeFund: jest.fn(),
       unsubscribeFund: jest.fn(),
     } as unknown as jest.Mocked<FundsInteractor>;
-    modalServiceMock = createModalServiceMock();
-    loadingServiceMock = createLoadingServiceMock();
 
     await TestBed.configureTestingModule({
       imports: [HomePage, RouterModule.forRoot([])],
       providers: [
-        { provide: ModalService, useValue: modalServiceMock },
-        { provide: LoadingService, useValue: loadingServiceMock },
+        { provide: ModalService, useClass: ModalServiceMock },
+        { provide: LoadingService, useClass: LoadingServiceMock },
       ],
     })
       .overrideComponent(HomePage, {
@@ -44,6 +42,8 @@ describe(`Funds HomePage`, () => {
       .compileComponents();
 
     accountStore = TestBed.inject(AccountStore);
+    modalServiceMock = TestBed.inject(ModalService);
+    loadingServiceMock = TestBed.inject(LoadingService);
     fixture = TestBed.createComponent(HomePage);
     component = fixture.componentInstance;
   });

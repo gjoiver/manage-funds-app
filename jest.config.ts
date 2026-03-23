@@ -27,7 +27,7 @@ const config: Config = {
     '!src/main.server.ts',
     '!src/app/app.config.server.ts',
   ],
-  coverageReporters: ['html', 'lcov', 'text-summary'],
+  coverageReporters: ['html', 'lcov', 'text'],
 };
 
 export default config;

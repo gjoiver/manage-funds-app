@@ -3,12 +3,15 @@ import { ModalService } from './modal.service';
 import { ApplicationRef } from '@angular/core';
 import { BUTTONS } from '@shared/constants';
 import { ModalEntity } from '@shared/components/modal/entities';
+import { LoadingServiceMock } from '../loading/loading.service.spec';
 
 const MODAL_CONFIG: ModalEntity = {
   title: 'Test Modal',
   message: 'Test message',
   buttons: [{ text: 'Confirm', style: BUTTONS.Primary }],
 };
+
+export class ModalServiceMock extends LoadingServiceMock {}
 
 describe(`ModalService`, () => {
   let service: ModalService;
