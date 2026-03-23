@@ -7,17 +7,18 @@
   </header>
 
   <main class="bg-white border border-brand-border rounded-xl overflow-hidden shadow-sm">
-    <app-table class="hidden md:block" [data]="transactions()" [columns]="tableConfig" [isLoading]="isLoading()" />
+    <app-table
+      class="hidden md:block"
+      [data]="transactions()"
+      [columns]="tableConfig"
+      [isLoading]="isLoading()"
+    />
 
     <div class="md:hidden space-y-5 p-4 bg-brand-surface">
       @if (isLoading()) {
         @for (i of [1, 2, 3]; track $index) {
           <app-card [columns]="tableConfig" [skeleton]="true" />
         }
-      } @else if (transactions().length === 0) {
-        <p class="py-8 text-center text-brand-secondary italic">
-          No se encontraron registros disponibles.
-        </p>
       } @else {
         @for (transaction of transactions(); track transaction.id) {
           <app-card [row]="transaction" [columns]="tableConfig" />

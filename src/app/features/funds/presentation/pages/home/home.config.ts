@@ -28,7 +28,7 @@ export const HomePageConfig = Object.freeze({
           { text: 'Confirmar retiro', style: BUTTONS.Danger },
         ],
       },
-      notifications: {
+      subscribe: {
         title: 'Suscribirse al fondo',
         message: '¿Cómo deseas recibir las notificaciones de ',
         buttons: [
@@ -38,6 +38,17 @@ export const HomePageConfig = Object.freeze({
             style: BUTTONS.Primary,
           },
         ],
+      },
+    },
+    toast: {
+      fundsError: 'Hubo un error al obtener los fondos. Intentalo más tarde por favor.',
+      subscribe: {
+        error: 'Hubo un error al subscribirse. Intentalo más tarde por favor.',
+        success: 'Te has subscrito de manera exitosa al fondo',
+      },
+      unsubscribe: {
+        error: 'Hubo un error al desubscribirse. Intentalo más tarde por favor.',
+        success: 'Te has retirado exitosamente del fondo',
       },
     },
   },

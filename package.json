@@ -6,9 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
-    "serve:ssr:manage-funds-app": "node dist/manage-funds-app/server/server.mjs"
+    "test": "jest --coverage"
   },
   "prettier": {
     "printWidth": 100,

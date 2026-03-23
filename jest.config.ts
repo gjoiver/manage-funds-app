@@ -23,9 +23,12 @@ const config: Config = {
     'src/**/*.ts',
     '!src/**/*.spec.ts',
     '!src/**/*.mock.ts',
+    '!src/**/index.ts',
+    '!src/**/*.routes.ts',
+    '!src/**/*.config.ts',
+    '!src/**/*.provider.ts',
     '!src/main.ts',
     '!src/main.server.ts',
-    '!src/app/app.config.server.ts',
   ],
   coverageReporters: ['html', 'lcov', 'text'],
 };

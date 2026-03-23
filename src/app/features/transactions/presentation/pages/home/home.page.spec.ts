@@ -2,11 +2,15 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HomePage } from './home.page';
 import { TransactionsInteractor } from '@transactions/core/interactor';
 import { TRANSACTIONS_MOCK } from '@transactions/data/mocks/transaction.mock';
+import { ToastService } from '@shared/services';
+import { ToastServiceMock } from '@shared/services/toast/toast.service.spec';
+import { HomeConfig } from './home.config';
 
 describe(`Transactions HomePage`, () => {
   let fixture: ComponentFixture<HomePage>;
   let component: HomePage;
   let transactionsInteractorMock: jest.Mocked<TransactionsInteractor>;
+  let toastServiceMock: ToastService;
 
   beforeEach(async () => {
     transactionsInteractorMock = {
@@ -16,6 +20,7 @@ describe(`Transactions HomePage`, () => {
 
     await TestBed.configureTestingModule({
       imports: [HomePage],
+      providers: [{ provide: ToastService, useClass: ToastServiceMock }],
     })
       .overrideComponent(HomePage, {
         set: {
@@ -24,6 +29,7 @@ describe(`Transactions HomePage`, () => {
       })
       .compileComponents();
 
+    toastServiceMock = TestBed.inject(ToastService);
     fixture = TestBed.createComponent(HomePage);
     component = fixture.componentInstance;
   });
@@ -94,5 +100,19 @@ describe(`Transactions HomePage`, () => {
 
     // Assert
     expect(transactions).toEqual([]);
+  });
+
+  it(`Given getTransactions rejects with an error
+    When ngOnInit handles the error
+    Then calls toastService.error with the transaction error message`, async () => {
+    // Arrange
+    transactionsInteractorMock.getTransactions.mockRejectedValue(new Error('Network error'));
+
+    // Act
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    // Assert
+    expect(toastServiceMock.error).toHaveBeenCalledWith(HomeConfig.i18n.toast.transactionError);
   });
 });

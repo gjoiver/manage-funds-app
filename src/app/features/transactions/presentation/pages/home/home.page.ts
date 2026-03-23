@@ -4,6 +4,7 @@ import { HomeConfig, TableConfig } from './home.config';
 import { TransactionEntity } from '@transactions/core/entities';
 import { TransactionsInteractor } from '@transactions/core/interactor';
 import { GetTransactionsUseCase, AddTransactionUseCase } from '@transactions/core/usecases';
+import { ToastService } from '@shared/services';
 
 @Component({
   selector: 'app-home',
@@ -20,6 +21,7 @@ export class HomePage implements OnInit {
   protected isLoading = signal<boolean>(false);
 
   private readonly transactionsInteractor = inject(TransactionsInteractor);
+  private readonly toastService = inject(ToastService);
 
   public ngOnInit(): void {
     this.getTransactions();
@@ -31,8 +33,8 @@ export class HomePage implements OnInit {
       const transactions = await this.transactionsInteractor.getTransactions();
       this.transactions.set(transactions);
       this.isLoading.set(false);
-    } catch (error) {
-      console.error(error);
+    } catch {
+      this.toastService.error(this.config.i18n.toast.transactionError);
     } finally {
       this.isLoading.set(false);
     }

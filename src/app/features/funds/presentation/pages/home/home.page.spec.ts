@@ -2,13 +2,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HomePage } from './home.page';
 import { FundsInteractor } from '@funds/core/interactor/funds.interactor';
 import { AccountStore } from '@funds/core/store/account.store';
-import { ModalService } from '@shared/services';
-import { LoadingService } from '@shared/services';
+import { LoadingService, ModalService, ToastService } from '@shared/services';
 import { GET_FUNDS_MOCK } from '@funds/data/mocks';
 import { NOTIFICATIONS_TYPES } from '@shared/constants';
 import { RouterModule } from '@angular/router';
 import { LoadingServiceMock } from '@shared/services/loading/loading.service.spec';
 import { ModalServiceMock } from '@shared/services/modal/modal.service.spec';
+import { ToastServiceMock } from '@shared/services/toast/toast.service.spec';
+import { HomePageConfig } from './home.config';
 
 describe(`Funds HomePage`, () => {
   let fixture: ComponentFixture<HomePage>;
@@ -17,6 +18,7 @@ describe(`Funds HomePage`, () => {
   let accountStore: AccountStore;
   let modalServiceMock: ModalService;
   let loadingServiceMock: LoadingService;
+  let toastServiceMock: ToastService;
 
   const fund = GET_FUNDS_MOCK.data[0];
 
@@ -32,6 +34,7 @@ describe(`Funds HomePage`, () => {
       providers: [
         { provide: ModalService, useClass: ModalServiceMock },
         { provide: LoadingService, useClass: LoadingServiceMock },
+        { provide: ToastService, useClass: ToastServiceMock },
       ],
     })
       .overrideComponent(HomePage, {
@@ -44,6 +47,7 @@ describe(`Funds HomePage`, () => {
     accountStore = TestBed.inject(AccountStore);
     modalServiceMock = TestBed.inject(ModalService);
     loadingServiceMock = TestBed.inject(LoadingService);
+    toastServiceMock = TestBed.inject(ToastService);
     fixture = TestBed.createComponent(HomePage);
     component = fixture.componentInstance;
   });
@@ -220,5 +224,72 @@ describe(`Funds HomePage`, () => {
 
     // Assert
     expect(accountStore.hasSubscription(fund.id)).toBe(false);
+  });
+
+  it(`Given getFunds rejects with an error
+    When ngOnInit handles the error
+    Then calls toastService.error with the funds error message`, async () => {
+    // Arrange
+    fundsInteractorMock.getFunds.mockRejectedValue(new Error('Network error'));
+
+    // Act
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    // Assert
+    expect(toastServiceMock.error).toHaveBeenCalledWith(HomePageConfig.i18n.toast.fundsError);
+  });
+
+  it(`Given confirmSubscription succeeds
+    When called directly
+    Then calls toastService.success with the subscribe success message`, async () => {
+    // Arrange
+    fundsInteractorMock.subscribeFund.mockResolvedValue(undefined);
+
+    // Act
+    await component['confirmSubscription'](fund);
+
+    // Assert
+    expect(toastServiceMock.success).toHaveBeenCalledWith(HomePageConfig.i18n.toast.subscribe.success);
+  });
+
+  it(`Given confirmSubscription rejects
+    When called directly
+    Then calls toastService.error with the subscribe error message`, async () => {
+    // Arrange
+    fundsInteractorMock.subscribeFund.mockRejectedValue(new Error('Subscribe error'));
+
+    // Act
+    await component['confirmSubscription'](fund);
+
+    // Assert
+    expect(toastServiceMock.error).toHaveBeenCalledWith(HomePageConfig.i18n.toast.subscribe.error);
+  });
+
+  it(`Given unsubscribeFund succeeds
+    When called directly
+    Then calls toastService.success with the unsubscribe success message`, async () => {
+    // Arrange
+    accountStore.subscribeToFund(fund, NOTIFICATIONS_TYPES.Email);
+    fundsInteractorMock.unsubscribeFund.mockResolvedValue(undefined);
+
+    // Act
+    await component['unsubscribeFund'](fund);
+
+    // Assert
+    expect(toastServiceMock.success).toHaveBeenCalledWith(HomePageConfig.i18n.toast.unsubscribe.success);
+  });
+
+  it(`Given unsubscribeFund rejects
+    When called directly
+    Then calls toastService.error with the unsubscribe error message`, async () => {
+    // Arrange
+    fundsInteractorMock.unsubscribeFund.mockRejectedValue(new Error('Unsubscribe error'));
+
+    // Act
+    await component['unsubscribeFund'](fund);
+
+    // Assert
+    expect(toastServiceMock.error).toHaveBeenCalledWith(HomePageConfig.i18n.toast.unsubscribe.error);
   });
 });

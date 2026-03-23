@@ -10,10 +10,11 @@ import {
 } from '@funds/core/usecases';
 import { AccountStore } from '@funds/core/store/account.store';
 import { CurrencyPipe } from '@angular/common';
-import { LoadingService, ModalService } from '@shared/services';
+import { LoadingService, ModalService, ToastService } from '@shared/services';
 import { NOTIFICATIONS_TYPES } from '@shared/constants';
 import { NotificationEntity } from '@shared/entities';
 import { NotificationChooserComponent } from '@funds/presentation/components/notification-chooser/notification-chooser.component';
+import { error } from 'console';
 
 @Component({
   selector: 'app-home',
@@ -34,6 +35,7 @@ export class HomePage implements OnInit {
   private readonly fundsInteractor = inject(FundsInteractor);
   private readonly loadingService = inject(LoadingService);
   private readonly modalService = inject(ModalService);
+  private readonly toastService = inject(ToastService);
 
   public ngOnInit(): void {
     this.getFunds();
@@ -65,7 +67,7 @@ export class HomePage implements OnInit {
       this.funds.set(response);
       this.isLoading.set(false);
     } catch (error) {
-      console.error(error);
+      this.toastService.error(this.config.i18n.toast.fundsError);
     } finally {
       this.isLoading.set(false);
     }
@@ -83,7 +85,7 @@ export class HomePage implements OnInit {
 
   private showNotificationModal(fund: FundEntity): void {
     this.selectedNotification.set(NOTIFICATIONS_TYPES.Email);
-    const { title, message, buttons } = this.config.i18n.modals.notifications;
+    const { title, message, buttons } = this.config.i18n.modals.subscribe;
 
     this.modalService.show({
       title: title,
@@ -105,28 +107,32 @@ export class HomePage implements OnInit {
   }
 
   private async confirmSubscription(fund: FundEntity): Promise<void> {
+    const { success, error } = this.config.i18n.toast.subscribe;
     try {
       this.loadingService.show();
       await this.fundsInteractor.subscribeFund(fund.id);
       this.accountStore.subscribeToFund(fund, this.selectedNotification());
 
       this.loadingService.hide();
-    } catch (error) {
-      console.error(error);
+      this.toastService.success(success);
+    } catch {
+      this.toastService.error(error);
     } finally {
       this.loadingService.hide();
     }
   }
 
   private async unsubscribeFund(fund: FundEntity): Promise<void> {
+    const { success, error } = this.config.i18n.toast.unsubscribe;
     try {
       this.loadingService.show();
       await this.fundsInteractor.unsubscribeFund(fund.id);
       this.accountStore.unsubscribeFund(fund);
 
       this.loadingService.hide();
-    } catch (error) {
-      console.error(error);
+      this.toastService.success(success);
+    } catch {
+      this.toastService.error(error);
     } finally {
       this.loadingService.hide();
     }
