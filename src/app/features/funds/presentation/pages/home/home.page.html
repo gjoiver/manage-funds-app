@@ -23,16 +23,6 @@
       [isLoading]="isLoading()"
     />
 
-    <div class="md:hidden space-y-5 p-4 bg-brand-surface">
-      @if (isLoading()) {
-        @for (i of [1, 2, 3]; track $index) {
-          <app-card [columns]="tableCols" [skeleton]="true" />
-        }
-      } @else {
-        @for (fund of funds(); track fund.id) {
-          <app-card [row]="fund" [columns]="tableCols" />
-        }
-      }
-    </div>
+    <app-card-list [data]="funds()" [columns]="tableCols" [isLoading]="isLoading()" />
   </main>
 </div>

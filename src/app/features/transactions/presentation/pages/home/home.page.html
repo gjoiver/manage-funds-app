@@ -14,16 +14,11 @@
       [isLoading]="isLoading()"
     />
 
-    <div class="md:hidden space-y-5 p-4 bg-brand-surface">
-      @if (isLoading()) {
-        @for (i of [1, 2, 3]; track $index) {
-          <app-card [columns]="tableConfig" [skeleton]="true" />
-        }
-      } @else {
-        @for (transaction of transactions(); track transaction.id) {
-          <app-card [row]="transaction" [columns]="tableConfig" />
-        }
-      }
-    </div>
+    <app-card-list
+      [data]="transactions()"
+      [columns]="tableConfig"
+      [isLoading]="isLoading()"
+      [emptyMessage]="config.i18n.transactionsNotFound"
+    />
   </main>
 </div>

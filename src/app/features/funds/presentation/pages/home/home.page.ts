@@ -2,7 +2,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { HomePageConfig, TableConfig } from './home.config';
 import { FundEntity } from '@funds/core/entities';
 import { FundsInteractor } from '@funds/core/interactor/funds.interactor';
-import { CardComponent, TableComponent } from '@shared/components';
+import { CardListComponent, TableComponent } from '@shared/components';
 import {
   GetFundsUseCase,
   SubscribeFundUseCase,
@@ -22,7 +22,7 @@ import { error } from 'console';
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
   providers: [FundsInteractor, GetFundsUseCase, SubscribeFundUseCase, UnsubscribeFundUseCase],
-  imports: [TableComponent, CardComponent, CurrencyPipe],
+  imports: [TableComponent, CardListComponent, CurrencyPipe],
 })
 export class HomePage implements OnInit {
   public config = HomePageConfig;

@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { CardComponent, TableComponent } from '@shared/components';
+import { CardListComponent, TableComponent } from '@shared/components';
 import { HomeConfig, TableConfig } from './home.config';
 import { TransactionEntity } from '@transactions/core/entities';
 import { TransactionsInteractor } from '@transactions/core/interactor';
@@ -9,7 +9,7 @@ import { ToastService } from '@shared/services';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [TableComponent, CardComponent],
+  imports: [TableComponent, CardListComponent],
   templateUrl: './home.page.html',
   providers: [TransactionsInteractor, GetTransactionsUseCase, AddTransactionUseCase],
 })

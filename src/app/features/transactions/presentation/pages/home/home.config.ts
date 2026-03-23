@@ -7,6 +7,7 @@ export const HomeConfig = Object.freeze({
     subtitle: 'Visualiza todas tus suscripciones y cancelaciones de fondos',
     emptyTitle: 'No hay transacciones',
     emptySubtitle: 'Cuando te suscribas a un fondo, verás el historial aquí',
+    transactionsNotFound: 'No se encontraron transacciones',
     toast: {
       transactionError: 'Hubo error al cargar las transacciones. Intentalo más tarde por favor.',
     },
