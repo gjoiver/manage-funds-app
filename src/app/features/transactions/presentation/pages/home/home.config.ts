@@ -7,13 +7,6 @@ export const HomeConfig = Object.freeze({
     subtitle: 'Visualiza todas tus suscripciones y cancelaciones de fondos',
     emptyTitle: 'No hay transacciones',
     emptySubtitle: 'Cuando te suscribas a un fondo, verás el historial aquí',
-    buttons: {
-      navigateToFund: 'Volver a Fondos',
-    },
-    noApply: 'N/A',
-  },
-  routes: {
-    funds: '/fondos',
   },
 });
 

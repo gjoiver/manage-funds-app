@@ -1,24 +1,12 @@
-<div class="min-h-screen bg-brand-surface">
-  <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-    <div class="mb-8 flex items-center justify-between">
-      <div>
-        <h1 class="text-3xl font-bold text-brand-primary sm:text-4xl">
-          {{ config.i18n.title }}
-        </h1>
-        <p class="mt-2 text-sm text-brand-secondary">
-          {{ config.i18n.subtitle }}
-        </p>
-      </div>
+<div class="w-full max-w-6xl mx-auto p-4 md:p-8 space-y-8">
+  <header class="space-y-1">
+    <h1 class="text-4xl md:text-5xl font-black text-brand-primary tracking-tight">
+      {{ config.i18n.title }}
+    </h1>
+    <p class="text-sm text-brand-secondary">{{ config.i18n.subtitle }}</p>
+  </header>
 
-      <app-base-button
-        [label]="config.i18n.buttons.navigateToFund"
-        [style]="BUTTONS.Secondary"
-        [buttonClick]="navigateToFunds.bind(this)"
-      />
-    </div>
-
-    <div class="rounded-lg bg-white shadow-sm">
-      <app-table [data]="transactions()" [columns]="tableConfig" [isLoading]="false" />
-    </div>
-  </div>
+  <main class="bg-white border border-brand-border rounded-xl overflow-hidden shadow-sm">
+    <app-table [data]="transactions()" [columns]="tableConfig" [isLoading]="isLoading()" />
+  </main>
 </div>

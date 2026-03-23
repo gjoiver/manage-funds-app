@@ -20,6 +20,14 @@ export const HomePageConfig = Object.freeze({
           },
         ],
       },
+      unsubscribe: {
+        title: 'Cancelar suscripción',
+        message: '¿Estás seguro que deseas retirarte del fondo ',
+        buttons: [
+          { text: 'Volver', style: BUTTONS.Secondary },
+          { text: 'Confirmar retiro', style: BUTTONS.Danger },
+        ],
+      },
       notifications: {
         title: 'Suscribirse al fondo',
         message: '¿Cómo deseas recibir las notificaciones de ',

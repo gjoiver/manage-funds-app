@@ -1,5 +1,4 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { Router } from '@angular/router';
 import { HomePageConfig, TableConfig } from './home.config';
 import { FundEntity } from '@funds/core/entities';
 import { FundsInteractor } from '@funds/core/interactor/funds.interactor';
@@ -12,8 +11,7 @@ import {
 import { AccountStore } from '@funds/core/store/account.store';
 import { CurrencyPipe } from '@angular/common';
 import { LoadingService, ModalService } from '@shared/services';
-import { BaseButtonComponent } from '@shared/components/base-button/base-button.component';
-import { BUTTONS, NOTIFICATIONS_TYPES } from '@shared/constants';
+import { NOTIFICATIONS_TYPES } from '@shared/constants';
 import { NotificationEntity } from '@shared/entities';
 import { NotificationChooserComponent } from '@funds/presentation/components/notification-chooser/notification-chooser.component';
 
@@ -23,12 +21,11 @@ import { NotificationChooserComponent } from '@funds/presentation/components/not
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
   providers: [FundsInteractor, GetFundsUseCase, SubscribeFundUseCase, UnsubscribeFundUseCase],
-  imports: [TableComponent, CurrencyPipe, BaseButtonComponent],
+  imports: [TableComponent, CurrencyPipe],
 })
 export class HomePage implements OnInit {
   public config = HomePageConfig;
   public tableCols = TableConfig(this);
-  protected readonly BUTTONS = BUTTONS;
   protected funds = signal<FundEntity[]>([]);
   protected isLoading = signal<boolean>(false);
   protected balance = computed(() => this.accountStore.getBalance());
@@ -37,7 +34,6 @@ export class HomePage implements OnInit {
   private readonly fundsInteractor = inject(FundsInteractor);
   private readonly loadingService = inject(LoadingService);
   private readonly modalService = inject(ModalService);
-  private readonly router = inject(Router);
 
   public ngOnInit(): void {
     this.getFunds();
@@ -53,7 +49,7 @@ export class HomePage implements OnInit {
 
   public handleSubscription(fund: FundEntity) {
     if (this.hasSubscription(fund)) {
-      this.unsubscribeFund(fund);
+      this.showUnsubscribeModal(fund);
 
       return;
     }
@@ -91,7 +87,7 @@ export class HomePage implements OnInit {
 
     this.modalService.show({
       title: title,
-      message: message + fund.name,
+      message: `${message} ${fund.name}?`,
       buttons: [
         buttons[0],
         {
@@ -136,8 +132,20 @@ export class HomePage implements OnInit {
     }
   }
 
-  protected navigateToHistory(): void {
-    this.router.navigate(['/transacciones']);
+  private showUnsubscribeModal(fund: FundEntity): void {
+    const { title, message, buttons } = this.config.i18n.modals.unsubscribe;
+
+    this.modalService.show({
+      title,
+      message: `${message} ${fund.name}?`,
+      buttons: [
+        buttons[0],
+        {
+          ...buttons[1],
+          action: () => this.unsubscribeFund(fund),
+        },
+      ],
+    });
   }
 
   private showNotEnoughMoneyModal() {

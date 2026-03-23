@@ -1,20 +1,12 @@
 <div class="w-full max-w-6xl mx-auto p-4 md:p-8 space-y-8">
-  <header class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-    <div class="space-y-1">
-      <h2 class="text-sm font-semibold text-brand-secondary uppercase tracking-widest">
-        {{ config.i18n.balanceTitle }}
-      </h2>
+  <header class="space-y-1">
+    <h2 class="text-sm font-semibold text-brand-secondary uppercase tracking-widest">
+      {{ config.i18n.balanceTitle }}
+    </h2>
 
-      <p class="text-4xl md:text-5xl font-black text-brand-primary tabular-nums tracking-tight">
-        {{ balance() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
-      </p>
-    </div>
-
-    <app-base-button
-      [label]="'Ver Historial'"
-      [style]="BUTTONS.Secondary"
-      [buttonClick]="navigateToHistory.bind(this)"
-    />
+    <p class="text-4xl md:text-5xl font-black text-brand-primary tabular-nums tracking-tight">
+      {{ balance() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+    </p>
   </header>
 
   <main class="bg-white border border-brand-border rounded-xl overflow-hidden shadow-sm">
