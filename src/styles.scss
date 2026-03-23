@@ -9,11 +9,56 @@
 }
 
 @layer base {
-  body {
-    @apply text-slate-700 antialiased text-sm;
+  html {
+    scroll-behavior: smooth;
   }
 
-  th {
-    @apply font-bold uppercase tracking-wider text-xs text-slate-500 bg-slate-50 border-b border-slate-200;
+  body {
+    @apply font-sans text-slate-700 antialiased text-sm leading-relaxed;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand-primary ring-offset-2;
+  }
+}
+
+@layer utilities {
+  .skeleton-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      var(--color-brand-surface) 0%,
+      var(--color-brand-border) 40%,
+      var(--color-brand-surface) 60%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+    border-radius: inherit;
+    z-index: 10;
+  }
+
+  @keyframes skeleton-shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.15s ease-out;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 }

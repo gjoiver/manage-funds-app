@@ -2,21 +2,19 @@ import { CurrencyPipe, DatePipe, NgComponentOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { ColumnDef, DynamicComponentCell } from '@shared/entities';
 import { SkeletonDirective } from '@shared/directives';
-import { TableComponentConfig } from './table.config';
 
 @Component({
-  selector: 'app-table',
+  selector: 'app-card',
   standalone: true,
-  templateUrl: './table.component.html',
-  styleUrl: './table.component.scss',
+  templateUrl: './card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CurrencyPipe, DatePipe, NgComponentOutlet, SkeletonDirective],
 })
-export class TableComponent<T> {
-  public config = TableComponentConfig;
-  public data = input.required<T[]>();
+export class CardComponent<T> {
+  public row = input<T>();
   public columns = input.required<ColumnDef<T>[]>();
-  public isLoading = input<boolean>();
+  public skeleton = input<boolean>(false);
+
   public getCellValue(row: T, key: keyof T | string): string | number | null | undefined {
     const value = (row as any)[key];
 

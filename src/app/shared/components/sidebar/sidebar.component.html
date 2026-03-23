@@ -22,12 +22,7 @@
   <div class="md:hidden fixed inset-0 z-40 bg-black/50" (click)="close()"></div>
 }
 
-<aside
-  [class]="
-    'fixed md:static md:h-full inset-y-0 left-0 z-50 w-64 bg-brand-primary flex flex-col flex-shrink-0 transition-transform duration-300 md:translate-x-0 ' +
-    (isOpen() ? 'translate-x-0' : '-translate-x-full')
-  "
->
+<aside [class]="asideClasses()">
   <div class="p-6 border-b border-white/10">
     <h1 class="text-white font-bold text-lg tracking-tight">{{ config.i18n.title }}</h1>
   </div>

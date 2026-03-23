@@ -2,7 +2,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { HomePageConfig, TableConfig } from './home.config';
 import { FundEntity } from '@funds/core/entities';
 import { FundsInteractor } from '@funds/core/interactor/funds.interactor';
-import { TableComponent } from '@shared/components';
+import { CardComponent, TableComponent } from '@shared/components';
 import {
   GetFundsUseCase,
   SubscribeFundUseCase,
@@ -21,7 +21,7 @@ import { NotificationChooserComponent } from '@funds/presentation/components/not
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
   providers: [FundsInteractor, GetFundsUseCase, SubscribeFundUseCase, UnsubscribeFundUseCase],
-  imports: [TableComponent, CurrencyPipe],
+  imports: [TableComponent, CardComponent, CurrencyPipe],
 })
 export class HomePage implements OnInit {
   public config = HomePageConfig;
