@@ -9,10 +9,25 @@ Asegúrate de tener instaladas las siguientes versiones antes de continuar:
 | Herramienta | Versión recomendada |
 | ----------- | ------------------- |
 | Node.js     | 22.18.0             |
-| npm         | 10.9.3              |
 | Angular CLI | 20.1.6              |
 
-Para instalar Angular CLI globalmente:
+Si tienes una versión distinta de Node.js, usa **nvm** para instalar la versión correcta:
+
+**macOS / Linux:**
+
+```bash
+nvm install 22.18.0
+nvm use 22.18.0
+```
+
+**Windows** ([nvm-windows](https://github.com/coreybutler/nvm-windows)):
+
+```bash
+nvm install 22.18.0
+nvm use 22.18.0
+```
+
+Luego instala Angular CLI globalmente:
 
 ```bash
 npm install -g @angular/cli@20
