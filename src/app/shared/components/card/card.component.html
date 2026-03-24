@@ -1,0 +1,54 @@
+<div class="bg-white border border-brand-border rounded-xl shadow-sm overflow-hidden">
+  @for (col of columns(); track col.key; let i = $index) {
+    <div
+      class="flex items-center justify-between gap-4 px-4 py-3 border-b border-brand-border last:border-0"
+    >
+      @if (skeleton()) {
+        <div class="h-3 w-16 rounded" [appSkeleton]="true"></div>
+        @switch (col.type) {
+          @case ('currency') {
+            <div class="h-4 w-20 rounded" [appSkeleton]="true"></div>
+          }
+          @case ('custom') {
+            <div class="h-8 w-24 rounded-lg" [appSkeleton]="true"></div>
+          }
+          @default {
+            <div class="h-4 w-28 rounded" [appSkeleton]="true"></div>
+          }
+        }
+      } @else {
+        <span class="text-xs font-bold uppercase tracking-wider text-brand-secondary flex-shrink-0">
+          {{ col.header }}
+        </span>
+
+        @if (row()) {
+          <div class="text-right text-sm min-w-0 break-words">
+            @switch (col.type) {
+              @case ('currency') {
+                <span class="font-medium tabular-nums text-brand-primary">
+                  {{ getCellValue(row()!, col.key) | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+                </span>
+              }
+              @case ('date') {
+                <span class="text-brand-secondary">
+                  {{ getCellValue(row()!, col.key) | date: 'dd/MM/yyyy HH:mm' }}
+                </span>
+              }
+              @case ('custom') {
+                @if (getDynamicCell(col, row()!, i); as cell) {
+                  <ng-container
+                    [ngComponentOutlet]="cell.class"
+                    [ngComponentOutletInputs]="cell.inputs || {}"
+                  />
+                }
+              }
+              @default {
+                {{ getCellValue(row()!, col.key) }}
+              }
+            }
+          </div>
+        }
+      }
+    </div>
+  }
+</div>

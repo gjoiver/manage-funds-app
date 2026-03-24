@@ -1,0 +1,24 @@
+<div class="w-full max-w-6xl mx-auto p-4 md:p-8 space-y-8">
+  <header class="space-y-1">
+    <h1 class="text-4xl md:text-5xl font-black text-brand-primary tracking-tight">
+      {{ config.i18n.title }}
+    </h1>
+    <p class="text-sm text-brand-secondary">{{ config.i18n.subtitle }}</p>
+  </header>
+
+  <main class="bg-white border border-brand-border rounded-xl overflow-hidden shadow-sm">
+    <app-table
+      class="hidden md:block"
+      [data]="transactions()"
+      [columns]="tableConfig"
+      [isLoading]="isLoading()"
+    />
+
+    <app-card-list
+      [data]="transactions()"
+      [columns]="tableConfig"
+      [isLoading]="isLoading()"
+      [emptyMessage]="config.i18n.transactionsNotFound"
+    />
+  </main>
+</div>

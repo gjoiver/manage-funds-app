@@ -1,0 +1,28 @@
+<div class="w-full max-w-6xl mx-auto p-4 md:p-8 space-y-8">
+  <header class="space-y-1">
+    <h2 class="text-sm font-semibold text-brand-secondary uppercase tracking-widest">
+      {{ config.i18n.balanceTitle }}
+    </h2>
+
+    <p class="text-4xl md:text-5xl font-black text-brand-primary tabular-nums tracking-tight">
+      {{ balance() | currency: 'COP' : 'symbol-narrow' : '1.0-0' }}
+    </p>
+  </header>
+
+  <main class="bg-white border border-brand-border rounded-xl overflow-hidden shadow-sm">
+    <div class="p-6 border-b border-brand-border bg-brand-surface">
+      <h3 class="text-lg font-bold text-brand-primary">{{ config.i18n.availableFunds }}</h3>
+
+      <p class="text-sm text-brand-secondary mt-1">{{ config.i18n.descriptionFunds }}</p>
+    </div>
+
+    <app-table
+      class="hidden md:block"
+      [data]="funds()"
+      [columns]="tableCols"
+      [isLoading]="isLoading()"
+    />
+
+    <app-card-list [data]="funds()" [columns]="tableCols" [isLoading]="isLoading()" />
+  </main>
+</div>

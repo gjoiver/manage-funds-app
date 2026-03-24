@@ -1,0 +1,33 @@
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-primary/40 backdrop-blur-sm animate-fade-in"
+>
+  <div class="w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden">
+    <div class="p-6">
+      <h3 class="text-lg font-bold text-brand-primary">{{ title() }}</h3>
+
+      @if (message()) {
+        <p class="mt-2 text-sm text-brand-secondary leading-relaxed">{{ message() }}</p>
+      }
+      @if (contentComponent()) {
+        <div class="mt-4">
+          <ng-container
+            [ngComponentOutlet]="contentComponent()!.class"
+            [ngComponentOutletInputs]="contentComponent()!.inputs || {}"
+          />
+        </div>
+      }
+    </div>
+
+    <div
+      class="flex flex-wrap justify-end gap-2 px-6 py-4 bg-brand-surface border-t border-brand-border"
+    >
+      @for (button of buttons(); track $index) {
+        <app-base-button
+          [label]="button.text"
+          [style]="button.style || 'primary'"
+          [buttonClick]="button.action"
+        ></app-base-button>
+      }
+    </div>
+  </div>
+</div>

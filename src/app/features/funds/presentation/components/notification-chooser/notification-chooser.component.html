@@ -1,0 +1,19 @@
+<div class="space-y-3 mt-2">
+  <p class="text-sm font-medium text-brand-secondary">{{ title }}</p>
+  <div class="flex flex-col gap-3">
+    <app-radio-button
+      name="notification"
+      [value]="NOTIFICATIONS_TYPES.Email"
+      [label]="NOTIFICATION_LABELS.email"
+      [checked]="selected() === NOTIFICATIONS_TYPES.Email"
+      (valueChange)="selectOption($event)"
+    />
+    <app-radio-button
+      name="notification"
+      [value]="NOTIFICATIONS_TYPES.Sms"
+      [label]="NOTIFICATION_LABELS.sms"
+      [checked]="selected() === NOTIFICATIONS_TYPES.Sms"
+      (valueChange)="selectOption($event)"
+    />
+  </div>
+</div>
