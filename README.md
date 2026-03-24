@@ -1,59 +1,68 @@
-# ManageFundsApp
+# Manage Funds App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.1.6.
+Aplicación web para la gestión de fondos de inversión y transacciones
 
-## Development server
+## Requisitos previos
 
-To start a local development server, run:
+Asegúrate de tener instaladas las siguientes versiones antes de continuar:
 
-```bash
-ng serve
-```
+| Herramienta | Versión recomendada |
+| ----------- | ------------------- |
+| Node.js     | 22.18.0             |
+| npm         | 10.9.3              |
+| Angular CLI | 20.1.6              |
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Para instalar Angular CLI globalmente:
 
 ```bash
-ng generate component component-name
+npm install -g @angular/cli@20
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Instalación
+
+Clona el repositorio e instala las dependencias:
 
 ```bash
-ng generate --help
+git clone https://github.com/gjoiver/manage-funds-app.git
+cd manage-funds-app
+npm install
 ```
 
-## Building
-
-To build the project run:
+## Ejecución en desarrollo
 
 ```bash
-ng build
+npm run start
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+La aplicación estará disponible en `http://localhost:4200/`. Se recargará automáticamente al modificar cualquier archivo fuente.
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Compilación para producción
 
 ```bash
-ng test
+npm run build
 ```
 
-## Running end-to-end tests
+Los artefactos se generan en el directorio `dist/`. La build de producción aplica optimizaciones automáticas de rendimiento.
 
-For end-to-end (e2e) testing, run:
+## Pruebas unitarias
+
+Las pruebas usan **Jest** con `jest-preset-angular`. Para ejecutarlas con reporte de cobertura:
 
 ```bash
-ng e2e
+npm run test
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Estructura del proyecto
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```
+src/
+└── app/
+    ├── features/
+    │   ├── funds/          # Feature de gestión de fondos
+    │   └── transactions/   # Feature de transacciones
+    └── shared/
+        ├── components/     # Componentes reutilizables
+        ├── constants/      # Constantes globales
+        ├── entities/       # Tipos e interfaces compartidas
+        └── services/       # Servicios compartidos
+```
