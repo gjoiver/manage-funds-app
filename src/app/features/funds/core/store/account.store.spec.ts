@@ -33,7 +33,7 @@ describe(`AccountStore`, () => {
   it(`Given the initial state
     When getSubscribedFunds is called
     Then returns an empty array`, () => {
-    // Arrange (no subscriptions yet)
+    // Arrange
 
     // Act
     const funds = store.getSubscribedFunds();
