@@ -1,3 +1,16 @@
+# Copy this file to your Angular project at:
+# .github/workflows/code-review.yml
+#
+# Required GitHub configuration:
+#   Variables (Settings → Variables → Actions):
+#     REVIEW_AGENT_URL — public URL of your local agent (e.g. https://xxxx.trycloudflare.com)
+#   Secrets (Settings → Secrets → Actions):
+#     REVIEW_AGENT_SECRET — same value as WEBHOOK_SECRET in your .env
+#
+# Important: for REQUEST_CHANGES to work, the GH_TOKEN in your agent's .env
+# must belong to a different GitHub account than the PR author.
+# Use a bot account or a teammate's token.
+
 name: AI Code Review
 
 on:
@@ -7,14 +20,78 @@ on:
 jobs:
   review:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Trigger local review agent
+      - name: Start review job
+        id: start
         run: |
-          curl -s -X POST "${{ vars.REVIEW_AGENT_URL }}/review" \
+          response=$(curl --silent --show-error --max-time 30 \
+            --write-out "\n%{http_code}" \
+            -X POST "${{ vars.REVIEW_AGENT_URL }}/review" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer ${{ secrets.REVIEW_AGENT_SECRET }}" \
             -d '{
               "prNumber": ${{ github.event.pull_request.number }},
               "repo": "${{ github.repository }}"
-            }'
+            }')
+
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | head -n -1)
+
+          if [ "$http_code" != "202" ]; then
+            echo "Failed to start review (HTTP $http_code): $body"
+            exit 1
+          fi
+
+          job_id=$(echo "$body" | grep -o '"jobId":"[^"]*"' | cut -d'"' -f4)
+          echo "job_id=$job_id" >> "$GITHUB_OUTPUT"
+          echo "Review started — jobId: $job_id"
+
+      - name: Poll until review completes
+        run: |
+          JOB_ID="${{ steps.start.outputs.job_id }}"
+          TIMEOUT=900   # 15 minutes max
+          ELAPSED=0
+          INTERVAL=15
+
+          while [ $ELAPSED -lt $TIMEOUT ]; do
+            sleep $INTERVAL
+            ELAPSED=$((ELAPSED + INTERVAL))
+
+            response=$(curl --silent --show-error --max-time 10 \
+              --write-out "\n%{http_code}" \
+              "${{ vars.REVIEW_AGENT_URL }}/review/$JOB_ID" \
+              -H "Authorization: Bearer ${{ secrets.REVIEW_AGENT_SECRET }}")
+
+            http_code=$(echo "$response" | tail -n1)
+            body=$(echo "$response" | head -n -1)
+
+            if [ "$http_code" != "200" ]; then
+              echo "Poll failed (HTTP $http_code): $body"
+              exit 1
+            fi
+
+            status=$(echo "$body" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
+            echo "[${ELAPSED}s] status: $status"
+
+            if [ "$status" = "done" ]; then
+              decision=$(echo "$body" | grep -o '"decision":"[^"]*"' | cut -d'"' -f4)
+              echo "Review decision: $decision"
+
+              if [ "$decision" = "REQUEST_CHANGES" ]; then
+                echo "Changes requested — blocking merge."
+                exit 1
+              fi
+
+              echo "Review passed."
+              exit 0
+            fi
+
+            if [ "$status" = "failed" ]; then
+              error=$(echo "$body" | grep -o '"error":"[^"]*"' | cut -d'"' -f4)
+              echo "Review failed: $error"
+              exit 1
+            fi
+          done
+
+          echo "Timed out waiting for review after ${TIMEOUT}s"
+          exit 1
