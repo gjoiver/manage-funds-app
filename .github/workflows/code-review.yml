@@ -1,0 +1,20 @@
+name: AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger local review agent
+        run: |
+          curl -s -X POST "${{ vars.REVIEW_AGENT_URL }}/review" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.REVIEW_AGENT_SECRET }}" \
+            -d '{
+              "prNumber": ${{ github.event.pull_request.number }},
+              "repo": "${{ github.repository }}"
+            }'
