@@ -29,13 +29,16 @@ export class HomePage implements OnInit {
 
   private async getTransactions(): Promise<void> {
     try {
+
       this.isLoading.set(true);
       const transactions = await this.transactionsInteractor.getTransactions();
       this.transactions.set(transactions);
       this.isLoading.set(false);
+
     } catch {
       this.toastService.error(this.config.i18n.toast.transactionError);
     } finally {
+
       this.isLoading.set(false);
     }
   }
