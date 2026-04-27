@@ -11,7 +11,7 @@ import { ToastService } from '@shared/services';
   standalone: true,
   imports: [TableComponent, CardListComponent],
   templateUrl: './home.page.html',
-  providers: [TransactionsInteractor, GetTransactionsUseCase, AddTransactionUseCase],
+  providers: [GetTransactionsUseCase, AddTransactionUseCase],
 })
 export class HomePage implements OnInit {
   public config = HomeConfig;
@@ -29,16 +29,13 @@ export class HomePage implements OnInit {
 
   private async getTransactions(): Promise<void> {
     try {
-
       this.isLoading.set(true);
       const transactions = await this.transactionsInteractor.getTransactions();
       this.transactions.set(transactions);
       this.isLoading.set(false);
-
     } catch {
       this.toastService.error(this.config.i18n.toast.transactionError);
     } finally {
-
       this.isLoading.set(false);
     }
   }
