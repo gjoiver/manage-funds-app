@@ -7,11 +7,11 @@ on:
 jobs:
   review:
     runs-on: ubuntu-latest
-    # This job blocks merge until it completes
     steps:
-      - name: Run AI code review
+      - name: Start review job
+        id: start
         run: |
-          response=$(curl --silent --show-error --max-time 900 \
+          response=$(curl --silent --show-error --max-time 30 \
             --write-out "\n%{http_code}" \
             -X POST "${{ vars.REVIEW_AGENT_URL }}/review" \
             -H "Content-Type: application/json" \
@@ -24,9 +24,53 @@ jobs:
           http_code=$(echo "$response" | tail -n1)
           body=$(echo "$response" | head -n -1)
 
-          echo "Agent response: $body"
-
-          if [ "$http_code" != "200" ]; then
-            echo "Review agent failed with status $http_code"
+          if [ "$http_code" != "202" ]; then
+            echo "Failed to start review (HTTP $http_code): $body"
             exit 1
           fi
+
+          job_id=$(echo "$body" | grep -o '"jobId":"[^"]*"' | cut -d'"' -f4)
+          echo "job_id=$job_id" >> "$GITHUB_OUTPUT"
+          echo "Review started — jobId: $job_id"
+
+      - name: Poll until review completes
+        run: |
+          JOB_ID="${{ steps.start.outputs.job_id }}"
+          TIMEOUT=900   # 15 minutes max
+          ELAPSED=0
+          INTERVAL=15
+
+          while [ $ELAPSED -lt $TIMEOUT ]; do
+            sleep $INTERVAL
+            ELAPSED=$((ELAPSED + INTERVAL))
+
+            response=$(curl --silent --show-error --max-time 10 \
+              --write-out "\n%{http_code}" \
+              "${{ vars.REVIEW_AGENT_URL }}/review/$JOB_ID" \
+              -H "Authorization: Bearer ${{ secrets.REVIEW_AGENT_SECRET }}")
+
+            http_code=$(echo "$response" | tail -n1)
+            body=$(echo "$response" | head -n -1)
+
+            if [ "$http_code" != "200" ]; then
+              echo "Poll failed (HTTP $http_code): $body"
+              exit 1
+            fi
+
+            status=$(echo "$body" | grep -o '"status":"[^"]*"' | cut -d'"' -f4)
+            echo "[${ELAPSED}s] status: $status"
+
+            if [ "$status" = "done" ]; then
+              echo "Review completed successfully."
+              exit 0
+            fi
+
+            if [ "$status" = "failed" ]; then
+              error=$(echo "$body" | grep -o '"error":"[^"]*"' | cut -d'"' -f4)
+              echo "Review failed: $error"
+              exit 1
+            fi
+          done
+
+          echo "Timed out waiting for review after ${TIMEOUT}s"
+          exit 1
