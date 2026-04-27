@@ -11,7 +11,7 @@ import { ToastService } from '@shared/services';
   standalone: true,
   imports: [TableComponent, CardListComponent],
   templateUrl: './home.page.html',
-  providers: [TransactionsInteractor, GetTransactionsUseCase, AddTransactionUseCase],
+  providers: [GetTransactionsUseCase, AddTransactionUseCase],
 })
 export class HomePage implements OnInit {
   public config = HomeConfig;
