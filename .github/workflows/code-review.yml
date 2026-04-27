@@ -1,3 +1,16 @@
+# Copy this file to your Angular project at:
+# .github/workflows/code-review.yml
+#
+# Required GitHub configuration:
+#   Variables (Settings → Variables → Actions):
+#     REVIEW_AGENT_URL — public URL of your local agent (e.g. https://xxxx.trycloudflare.com)
+#   Secrets (Settings → Secrets → Actions):
+#     REVIEW_AGENT_SECRET — same value as WEBHOOK_SECRET in your .env
+#
+# Important: for REQUEST_CHANGES to work, the GH_TOKEN in your agent's .env
+# must belong to a different GitHub account than the PR author.
+# Use a bot account or a teammate's token.
+
 name: AI Code Review
 
 on:
@@ -61,7 +74,15 @@ jobs:
             echo "[${ELAPSED}s] status: $status"
 
             if [ "$status" = "done" ]; then
-              echo "Review completed successfully."
+              decision=$(echo "$body" | grep -o '"decision":"[^"]*"' | cut -d'"' -f4)
+              echo "Review decision: $decision"
+
+              if [ "$decision" = "REQUEST_CHANGES" ]; then
+                echo "Changes requested — blocking merge."
+                exit 1
+              fi
+
+              echo "Review passed."
               exit 0
             fi
 
